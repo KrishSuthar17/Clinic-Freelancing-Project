@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static tailwind_tags %}
+
+{% block content %}
+{% include "components/live_Sessions.html" %}
+
+
+
+<section class="bg-[#003242] py-20">
+    <div class="max-w-7xl mx-auto px-4">
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+
+            <!-- LEFT CONTENT -->
+            <div class="text-white">
+
+                <p class="text-lg mb-3">
+                    Make Your Appointment Today
+                </p>
+
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">
+                    Dr. Ketul Soni
+                </h2>
+
+                <p class="text-gray-200 leading-relaxed mb-8 max-w-xl">
+                    Having massive years of experience and knowledge in the homeopathic field.
+                    he has specialized in skin & hair treatment, & diabetes, and treatment of
+                    other chronic diseases.
+                </p>
+
+                <h3 class="text-xl font-semibold mb-4">
+                    How To Book?
+                </h3>
+
+                <ul class="space-y-2 mb-8">
+                    <li class="flex items-center gap-3">
+                        <span class="text-green-400 font-bold">✔</span>
+                        Select The Date
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="text-green-400 font-bold">✔</span>
+                        Choose Your Time Slot
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="text-green-400 font-bold">✔</span>
+                        Enter Your Details
+                    </li>
+                </ul>
+
+                <a href="#" class="inline-block bg-white text-[#003242] font-semibold
+                 px-8 py-4 rounded-md hover:bg-gray-700 transition">
+                    Book Clinic Appointment Now
+                </a>
+
+            </div>
+
+            <!-- RIGHT IMAGE -->
+            <div class="flex justify-center lg:justify-end">
+                <img src="{% static 'images/doctor-hero.jpg' %}" alt="Dr ketul soni"
+                    class="rounded-lg shadow-lg max-w-full h-auto">
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

@@ -9,103 +9,89 @@
 
 <!-- ================= HEADER ================= -->
 
+{% include "components/hero.html" %}
 
-<!-- ================= HERO SECTION ================= -->
-<section class="bg-gray-50">
-  <div class="max-w mx-auto grid md:grid-cols-2 gap-10 px-4 py-20 items-center">
+<!-- ================= ABOUT SECTION ================= -->
 
-    <!-- Left Content -->
-    <div>
-      <h1 class="text-4xl md:text-5xl font-bold text-primary mb-6">
-        PRATIBHA HOMEOPATHIC CLINIC
-      </h1>
 
-      <p class="text-lg mb-8">
-        "A POSITIVE COMMITMENT TO HEALING"
-      </p>
 
-      <div class="flex gap-4">
-        <a href="tel:+917827525956"
-           class="border-2 border-primary text-primary px-6 py-3 font-semibold hover:bg-primary hover:text-amber-600 transition">
-          Call Now
-        </a>
+{% include "components/Stating_about.html" %}
+{% include "components/diseases.html" %}
+{% include "components/about.html" %}
+{% include "components/cta.html" %}
+{% include "components/live_Sessions.html" %}
 
-        <a href="#"
-           class="bg-amber-600 text-white px-6 py-3 font-semibold hover:opacity-90 transition">
+<section class="bg-[#003242] py-20">
+  <div class="max-w-7xl mx-auto px-4">
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+
+      <!-- LEFT CONTENT -->
+      <div class="text-white">
+
+        <p class="text-lg mb-3">
+          Make Your Appointment Today
+        </p>
+
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">
+          Dr. Ketul Soni
+        </h2>
+
+        <p class="text-gray-200 leading-relaxed mb-8 max-w-xl">
+          Having massive years of experience and knowledge in the homeopathic field.
+          he has specialized in skin & hair treatment, & diabetes, and treatment of
+          other chronic diseases.
+        </p>
+
+        <h3 class="text-xl font-semibold mb-4">
+          How To Book?
+        </h3>
+
+        <ul class="space-y-2 mb-8">
+          <li class="flex items-center gap-3">
+            <span class="text-green-400 font-bold">✔</span>
+            Select The Date
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="text-green-400 font-bold">✔</span>
+            Choose Your Time Slot
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="text-green-400 font-bold">✔</span>
+            Enter Your Details
+          </li>
+        </ul>
+
+        <a href="#" class="inline-block bg-white text-[#003242] font-semibold
+                 px-8 py-4 rounded-md hover:bg-gray-700 transition">
           Book Clinic Appointment Now
         </a>
-      </div>
-    </div>
 
-    <!-- Right Image -->
-    <div class="relative">
-      <img src="{% static 'images/doctor-hero.jpg' %}"
-           alt="Dr Pratibha Tanwar"
-           class="rounded-lg w-full">
+      </div>
+
+      <!-- RIGHT IMAGE -->
+      <div class="flex justify-center lg:justify-end">
+        <img src="{% static 'images/doctor-hero.jpg' %}" alt="Dr ketul soni"
+          class="rounded-lg shadow-lg max-w-full h-auto">
+      </div>
+
     </div>
 
   </div>
 </section>
 
-<!-- ================= ABOUT SECTION ================= -->
- <section class="bg-white">
-  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 px-4 py-20 items-center">
-
-    <div>
-      <img src="{% static 'images/doctor-about.jpg' %}"
-           alt="Dr Pratibha Tanwar"
-           class="rounded-lg">
-    </div>
-
-    <div>
-      <span class="text-accent font-bold uppercase">About</span>
-      <h2 class="text-4xl font-bold text-primary mt-2">
-        Dr. Pratibha Tanwar
-      </h2>
-      <p class="italic mt-2">About
-                Dr. Pratibha Tanwar
-                (Gold Medalist)
-                Dr. Pratibha Tanwar, a gold medalist, is the best homeopathic doctor in Delhi. Dr. Pratibha started her
-                medical career after completing her medical graduate degree (BHMS) with a gold medal in 2010 from the
-                prestigious Dr. B. R. Sur Homoeopathic Medical College, Hospital, and Research Centre, New Delhi, which
-                is a fully run government medical college under the Govt. of NCT of Delhi. So, make an appointment with
-                the best homeopathy doctor in Delhi to get natural remedies.
-
-                After completing the internship, Dr. Pratibha Tanwar served as a house physician at the same institution
-                for one year. Dr. Pratibha has completed the SCPH Specialty Course in Predictive Homoeopathy from ICHM
-                in cooperation with the European Centre for Peace and Development of the University for Peace
-                established by the United Nations (UN).</p>
-                
-                <a href="#appointment" class="mt-6 inline-block border-2 border-amber-600 rounded-md px-6 py-3 font-semibold text-amber-600 hover:bg-amber-600 hover:text-white transition">
-                                Book Clinic Appointment Now
-                            </a>
-    </div>
-  </div>
-</section> 
-
-
-
-
-
- {% include "components/diseases.html" %}
- {% include "components/about.html" %}
- {% include "components/cta.html" %}
- {% include "components/live_Sessions.html" %}
-
 
 <!-- ================= FLOATING BUTTONS ================= -->
 <a href="https://wa.me/917827525956"
-   class="fixed bottom-24 right-5 bg-green-500 text-white p-4 rounded-full shadow-lg hover:scale-110 transition"
-   aria-label="WhatsApp">
+  class="fixed bottom-24 right-5 bg-green-500 text-white p-4 rounded-full shadow-lg hover:scale-110 transition"
+  aria-label="WhatsApp">
   💬
 </a>
 
 <a href="tel:+917827525956"
-   class="fixed bottom-6 right-5 bg-primary text-white p-4 rounded-full shadow-lg hover:scale-110 transition"
-   aria-label="Call">
+  class="fixed bottom-6 right-5 bg-primary text-white p-4 rounded-full shadow-lg hover:scale-110 transition"
+  aria-label="Call">
   📞
 </a>
 
 {% endblock %}
-
-
