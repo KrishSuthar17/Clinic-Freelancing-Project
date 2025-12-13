@@ -1,0 +1,89 @@
+{% load static tailwind_tags %}
+<section class="bg-primary py-20 bg-[#0e4b5a]">
+    <div class="max-w-7xl mx-auto px-4">
+
+        <!-- Title -->
+        <h2 class="text-center text-black text-4xl font-bold tracking-widest mb-14">
+            DISEASES
+        </h2>
+
+        <!-- Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+
+            <!-- Card -->
+
+            <div class="bg-white rounded-lg p-8 flex flex-col items-center justify-center
+               text-white transition-all duration-300
+               hover:shadow-[0_0_25px_rgba(255,255,255,0.25)]">
+
+                <!-- Icon -->
+                <div class="mb-5">
+                    
+                    <img src="{% static 'images/diseases/acne.png' %}" alt="Acne" class="w-16 h-16 object-contain">
+                </div>
+
+                <!-- Text -->
+                <p class="text-lg font-semibold">
+                    <img src="{% static 'images/diseases/acne.png' %}" alt="Acne" class="w-16 h-16 object-contain">
+                </p>
+            </div>
+            <img src="{% static 'images/diseases/acne.png' %}" alt="Acne" class="w-16 h-16 object-contain">
+
+        </div>
+
+        <!-- Button -->
+        <div class="text-center mt-16">
+            <a href="#" class="inline-block bg-white text-primary font-semibold px-10 py-4 rounded-md
+                hover:bg-gray-100 transition">
+                Click For More Treatments
+            </a>
+        </div>
+
+    </div>
+</section>
+
+
+
+
+
+<!-- backend  -->
+<!-- 
+
+ {% load static tailwind_tags %}
+<section class="bg-primary py-20">
+    <div class="max-w-7xl mx-auto px-4">
+
+       
+        <h2 class="text-center text-black text-4xl font-bold tracking-widest mb-14">
+            DISEASES
+        </h2>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+
+            {% for disease in diseases %}
+            <div class="bg-[#0e4b5a] rounded-lg p-8 flex flex-col items-center justify-center
+               text-white transition-all duration-300
+               hover:shadow-[0_0_25px_rgba(255,255,255,0.25)]">
+
+                <div class="mb-5">
+                    {{ disease.icon|safe }}
+                </div>
+
+                <p class="text-lg font-semibold">
+                    {{ disease.name }}
+                </p>
+            </div>
+            {% endfor %}
+
+        </div>
+
+        <div class="text-center mt-16">
+            <a href="#" class="inline-block bg-white text-primary font-semibold px-10 py-4 rounded-md
+                hover:bg-gray-100 transition">
+                Click For More Treatments
+            </a>
+        </div>
+
+    </div>
+</section>
+-->

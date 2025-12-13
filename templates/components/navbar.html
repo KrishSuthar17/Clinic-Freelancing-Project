@@ -1,0 +1,41 @@
+{% load static tailwind_tags %}
+{% load static tailwind_tags %}
+<div class="w-full bg-[#0e4b5a] flex justify-between text-white">
+
+    <div class="max-w-7xl mx-auto flex gap-4 bg-primary text-primary-foreground text-sm py-2">
+        <div class="container-custom flex flex-wrap justify-between items-center gap-3">
+            <div class="flex gap-6 items-center">
+                <span>📍 Ahmedabad</span>
+                <a href="mailto:care@drpratibhahomeopathic.com">✉ Drketulshomeopathicclinic@gmail.com</a>
+            </div>
+            <div class="flex gap-6 items-center">
+                <a href="https://youtube.com/@ketulsoni-fd1pi?si=F0zOKLd8AMRkXoAY"><span class="text-red-500">▶
+                        Subscribe
+                        Now</span></a>
+                <a href="tel:+917827525956">📞 +91-8733073586</a>
+            </div>
+        </div>
+    </div>
+</div>
+<header class="bg-white border-b">
+    <div class="max-w-7xl mx-auto flex items-center justify-between px-4 py-4">
+
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+            <img src="{% static 'images/logo.png' %}" alt="Clinic Logo" class="h-12">
+        </div>
+
+        <!-- Navigation -->
+        <nav class="hidden md:flex gap-6 font-semibold text-primary">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'homeopathy' %}">Homeopathy</a>
+            <a href="{% url 'online_consultation' %}">Online Consultation</a>
+            <a href="{% url 'testimonials' %}">Testimonials</a>
+            <a href="{% url 'faqs' %}">FAQs</a>
+            <a href="{% url 'gallery_videos' %}">Gallery/Video</a>
+            <a href="{% url 'blogs' %}">Blog</a>
+            <a href="{% url 'content' %}">Contact</a>
+        </nav>
+
+    </div>
+</header>
