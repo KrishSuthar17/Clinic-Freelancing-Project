@@ -1,316 +1,221 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static tailwind_tags %}
 
-{% block title %}Online Consultation | Dr.Ketul Soni Homeopathic Clinic{% endblock %}
+{% block title %}
+  Online Consultation | Dr.Ketul Soni Homeopathic Clinic
+{% endblock %}
 
 {% block content %}
-<section class="bg-white py-20">
-  <div class="max-w-7xl mx-auto px-4 space-y-16">
+  <section class="bg-white py-20">
+    <div class="max-w-7xl mx-auto px-4 space-y-16">
+      <!-- ================= PAGE INTRO ================= -->
+      <div class="text-center max-w-3xl mx-auto">
+        <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">Online Homeopathy Consultation</h1>
 
-    <!-- ================= PAGE INTRO ================= -->
-    <div class="text-center max-w-3xl mx-auto">
-      <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">
-        Online Homeopathy Consultation
-      </h1>
-
-      <p class="text-gray-600 leading-relaxed">
-        Get expert, ethical, and personalized online homeopathy consultation from anywhere in the world,
-        directly from Ketul Soni Homeopathic Clinic.
-      </p>
-    </div>
-
-    <!-- ================= SUB INTRO ================= -->
-    <div class="max-w-4xl mx-auto text-center">
-      <h2 class="text-2xl md:text-3xl font-semibold text-primary mb-3">
-        Homeopathy Consultation with Dr. Ketul Soni Tanwar (BHMS, SCPH)
-      </h2>
-
-      <p class="text-gray-600 leading-relaxed">
-        Our digital consultation service allows you to access trusted homeopathic care through secure video calls,
-        without travelling or waiting in queues — making holistic treatment accessible, simple, and effective.
-      </p>
-    </div>
-
-    <!-- ================= MAIN CONTENT ================= -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-
-      <!-- LEFT: IMAGE -->
-      <div class="flex justify-center">
-        <img
-          src="{% static 'images/doctor-hero.jpg' %}"
-          alt="Dr. Ketul Soni Tanwar"
-          class="w-full max-w-md rounded-xl shadow-md object-cover"
-        >
+        <p class="text-gray-600 leading-relaxed">Get expert, ethical, and personalized online homeopathy consultation from anywhere in the world, directly from Ketul Soni Homeopathic Clinic.</p>
       </div>
 
-      <!-- RIGHT: ABOUT -->
-      <div class="space-y-6">
+      <!-- ================= SUB INTRO ================= -->
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-2xl md:text-3xl font-semibold text-primary mb-3">Homeopathy Consultation with Dr. Ketul Soni Tanwar (BHMS, SCPH)</h2>
 
-        <h3 class="text-2xl font-bold text-primary">
-          About Dr. Ketul Soni Tanwar (BHMS, SCPH)
-          <span class="block text-base font-medium mt-1">
-            (Gold Medalist)
-          </span>
-        </h3>
+        <p class="text-gray-600 leading-relaxed">Our digital consultation service allows you to access trusted homeopathic care through secure video calls, without travelling or waiting in queues — making holistic treatment accessible, simple, and effective.</p>
+      </div>
 
-        <ul class="space-y-3 text-gray-700 leading-relaxed list-disc pl-5">
+      <!-- ================= MAIN CONTENT ================= -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <!-- LEFT: IMAGE -->
+        <div class="flex justify-center">
+          {% if doctor.image %}
+            <img src="{{ doctor.image.url }}" alt="{{ doctor.name }}" class="w-full max-w-md rounded-xl shadow-md object-cover" />
+          {% endif %}
+        </div>
+
+        <!-- RIGHT: ABOUT -->
+        <div class="space-y-6">
+          <h3 class="text-2xl font-bold text-primary">
+            {{ doctor.about_title }}
+            {% if doctor.about_subtitle %}
+              <span class="block text-base font-medium mt-1">{{ doctor.about_subtitle }}</span>
+            {% endif %}
+          </h3>
+
+          <ul class="space-y-3 text-gray-700 leading-relaxed list-disc pl-5">
+            {% for point in doctor.about_points.splitlines %}
+              <li>{{ point }}</li>
+            {% endfor %}
+          </ul>
+
+          <!-- CTA -->
+          <a href="#" class="inline-block bg-[#003242] text-white px-8 py-4 rounded-full font-semibold hover:opacity-90 transition">Book Appointment Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% include 'components/cta.html' %}
+  <section class="bg-white py-20">
+    <div class="max-w-5xl mx-auto px-4">
+      <!-- ================= TITLE ================= -->
+      <h2 class="text-3xl md:text-4xl font-bold text-primary mb-10">How Our Online Homeopathy Consultation Works</h2>
+
+      <!-- ================= STEPS ================= -->
+      <div class="space-y-10 text-gray-700 leading-relaxed">
+        <!-- STEP 1 -->
+        <div>
+          <h3 class="text-lg font-semibold text-primary mb-2">1. Case History via Video Call (Zoom / Google Meet)</h3>
+          <p>Your complete case details — symptoms, medical history, emotional factors, lifestyle, and triggering causes — are documented through a secure online video consultation (Hindi or English).</p>
+        </div>
+
+        <!-- STEP 2 -->
+        <div>
+          <h3 class="text-lg font-semibold text-primary mb-2">2. Expert Analysis by Dr. Pratibha Tanwar</h3>
+          <p>Every case is carefully studied from a classical and predictive homeopathy perspective. The goal is to understand the root cause, unique symptom patterns, and your body’s overall response.</p>
+        </div>
+
+        <!-- STEP 3 -->
+        <div>
+          <h3 class="text-lg font-semibold text-primary mb-2">3. Personalized Homeopathic Treatment Plan</h3>
+          <p class="mb-3">Based on the case analysis, you receive a tailored treatment plan which includes:</p>
+
+          <ul class="list-disc pl-6 space-y-2">
+            <li>The most suitable homeopathic remedy</li>
+            <li>Dosage, repetition, and duration guidance</li>
+            <li>Lifestyle and health recommendations</li>
+            <li>Supportive homeopathic management strategies</li>
+          </ul>
+        </div>
+
+        <!-- STEP 4 -->
+        <div>
+          <h3 class="text-lg font-semibold text-primary mb-2">4. Follow-Up Support</h3>
+          <p>Follow-ups are scheduled depending on your condition. You can connect online whenever required for ongoing guidance.</p>
+        </div>
+
+        <!-- STEP 5 -->
+        <div>
+          <h3 class="text-lg font-semibold text-primary mb-2">5. Periodic Case Review</h3>
+          <p>Your case is reviewed after a defined period to evaluate progress, adjust remedies, and ensure continued improvement.</p>
+        </div>
+      </div>
+
+      <!-- ================= CONSULTATION DETAILS ================= -->
+      <div class="mt-16">
+        <h3 class="text-2xl font-bold text-primary mb-6">Consultation Details</h3>
+
+        <ul class="space-y-3 text-gray-700">
           <li>
-            Award-winning and highly qualified homeopathic doctor with over a decade of clinical experience
+            <strong>Mode:</strong> Zoom / Google Meet
           </li>
           <li>
-            Gold Medalist (BHMS, 2010) — Dr. B. R. Sur Homeopathic Medical College & Hospital, New Delhi
+            <strong>Duration:</strong> 15–30 minutes
           </li>
           <li>
-            Former House Physician at a government institution
+            <strong>Languages:</strong> Hindi & English
           </li>
           <li>
-            Completed Specialty Course in Predictive Homeopathy (SCPH) — ICHM
-          </li>
-          <li>
-            Known for compassionate approach and in-depth case analysis
-          </li>
-          <li>
-            Trusted by patients across India and globally for effective homeopathic management
+            <strong>Contact:</strong> +91 78275 25956
           </li>
         </ul>
 
-        <!-- CTA -->
-        <a
-          href="#"
-          class="inline-block bg-[#003242] text-white px-8 py-4 rounded-full font-semibold
-                 hover:opacity-90 transition"
-        >
-          Book Appointment Now
+        <p class="mt-4 text-sm text-gray-500">(Consultation fee details are available below on the page.)</p>
+      </div>
+    </div>
+  </section>
+
+  {% include 'components/diseases.html' %}
+  <div class="max-w-5xl mx-auto px-4 mt-16">
+    <h3 class="text-3xl font-semibold text-[#003242] mb-2">Why Choose Our Online Homeopathy Consultation?</h3>
+
+    <ul class="list-disc pl-6 space-y-2">
+      <li>Expert doctor with proven qualifications & clinical experience</li>
+      <li>Safe, gentle, and holistic approach</li>
+      <li>No travel or waiting required</li>
+      <li>High-quality, detailed case analysis</li>
+      <li>Global access</li>
+      <li>Ethical practice with transparent communication</li>
+      <li>Complete follow-up support</li>
+    </ul>
+  </div>
+
+  <section class="bg-white py-20">
+    <div class="max-w-5xl mx-auto px-4">
+      <!-- TITLE -->
+      <h2 class="text-3xl md:text-4xl font-bold text-primary mb-12 text-center">Frequently Asked Questions (FAQs)</h2>
+
+      <!-- FAQ LIST -->
+      <div class="space-y-4" id="faq-container">
+        <!-- FAQ ITEM -->
+        <div class="border rounded-lg">
+          <button class="faq-btn w-full text-left px-6 py-4 font-semibold text-gray-800 bg-gray-50 flex justify-between items-center">
+            Is online homeopathy consultation effective?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-content hidden px-6 py-4 text-gray-700">Yes, homeopathy relies on detailed case understanding, which can be effectively achieved through video consultation. Many patients prefer online consultations due to convenience and accessibility.</div>
+        </div>
+
+        <div class="border rounded-lg">
+          <button class="faq-btn w-full text-left px-6 py-4 font-semibold text-gray-800 bg-gray-50 flex justify-between items-center">
+            Can patients from the US and UK take online consultation?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-content hidden px-6 py-4 text-gray-700">Absolutely. Our online consultation is open to patients from India, US, UK, and worldwide.</div>
+        </div>
+
+        <div class="border rounded-lg">
+          <button class="faq-btn w-full text-left px-6 py-4 font-semibold text-gray-800 bg-gray-50 flex justify-between items-center">
+            How do I book an appointment?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-content hidden px-6 py-4 text-gray-700">
+            You can call <strong>+91 8733073586</strong> or use the appointment form available on the website.
+          </div>
+        </div>
+
+        <div class="border rounded-lg">
+          <button class="faq-btn w-full text-left px-6 py-4 font-semibold text-gray-800 bg-gray-50 flex justify-between items-center">
+            Will medicines be delivered to my location?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-content hidden px-6 py-4 text-gray-700">Guidance will be provided during the consultation. Local availability may vary based on country/region.</div>
+        </div>
+      </div>
+
+      <!-- DISCLAIMER -->
+      <div class="mt-14 text-sm text-gray-600 leading-relaxed">
+        <strong>DISCLAIMER:</strong>
+        There is no guarantee of specific results and results may vary. None of the remedies or services mentioned should be used without clearance from your physician or healthcare provider. We do not claim to cure any disease considered incurable by modern medicine. The website content is not a substitute for direct, professional medical care or diagnosis.
+      </div>
+
+      <!-- PAYMENT BUTTONS -->
+      <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <a href="#" class="text-center bg-[#003242] text-white px-6 py-4 rounded-lg font-semibold hover:opacity-90 transition">
+          Payment Plans for Indian Residents<br />
+          <span class="text-sm font-normal">(People staying within India)</span>
         </a>
 
-      </div>
+        <a href="#" class="text-center bg-[#003242] text-white px-6 py-4 rounded-lg font-semibold hover:opacity-90 transition">
+          Payment Plans for Indian Patients Abroad<br />
+          <span class="text-sm font-normal">(Indian people staying outside India)</span>
+        </a>
 
+        <a href="#" class="text-center bg-[#003242] text-white px-6 py-4 rounded-lg font-semibold hover:opacity-90 transition">
+          Payment Plans for Foreign Patients<br />
+          <span class="text-sm font-normal">(People staying outside India)</span>
+        </a>
+      </div>
     </div>
+  </section>
 
-  </div>
-</section>
-
-{% include "components/cta.html" %}
-<section class="bg-white py-20">
-  <div class="max-w-5xl mx-auto px-4">
-
-    <!-- ================= TITLE ================= -->
-    <h2 class="text-3xl md:text-4xl font-bold text-primary mb-10">
-      How Our Online Homeopathy Consultation Works
-    </h2>
-
-    <!-- ================= STEPS ================= -->
-    <div class="space-y-10 text-gray-700 leading-relaxed">
-
-      <!-- STEP 1 -->
-      <div>
-        <h3 class="text-lg font-semibold text-primary mb-2">
-          1. Case History via Video Call (Zoom / Google Meet)
-        </h3>
-        <p>
-          Your complete case details — symptoms, medical history, emotional factors,
-          lifestyle, and triggering causes — are documented through a secure online
-          video consultation (Hindi or English).
-        </p>
-      </div>
-
-      <!-- STEP 2 -->
-      <div>
-        <h3 class="text-lg font-semibold text-primary mb-2">
-          2. Expert Analysis by Dr. Pratibha Tanwar
-        </h3>
-        <p>
-          Every case is carefully studied from a classical and predictive homeopathy perspective.
-          The goal is to understand the root cause, unique symptom patterns, and your body’s
-          overall response.
-        </p>
-      </div>
-
-      <!-- STEP 3 -->
-      <div>
-        <h3 class="text-lg font-semibold text-primary mb-2">
-          3. Personalized Homeopathic Treatment Plan
-        </h3>
-        <p class="mb-3">
-          Based on the case analysis, you receive a tailored treatment plan which includes:
-        </p>
-
-        <ul class="list-disc pl-6 space-y-2">
-          <li>The most suitable homeopathic remedy</li>
-          <li>Dosage, repetition, and duration guidance</li>
-          <li>Lifestyle and health recommendations</li>
-          <li>Supportive homeopathic management strategies</li>
-        </ul>
-      </div>
-
-      <!-- STEP 4 -->
-      <div>
-        <h3 class="text-lg font-semibold text-primary mb-2">
-          4. Follow-Up Support
-        </h3>
-        <p>
-          Follow-ups are scheduled depending on your condition. You can connect online
-          whenever required for ongoing guidance.
-        </p>
-      </div>
-
-      <!-- STEP 5 -->
-      <div>
-        <h3 class="text-lg font-semibold text-primary mb-2">
-          5. Periodic Case Review
-        </h3>
-        <p>
-          Your case is reviewed after a defined period to evaluate progress,
-          adjust remedies, and ensure continued improvement.
-        </p>
-      </div>
-
-    </div>
-
-    <!-- ================= CONSULTATION DETAILS ================= -->
-    <div class="mt-16">
-
-      <h3 class="text-2xl font-bold text-primary mb-6">
-        Consultation Details
-      </h3>
-
-      <ul class="space-y-3 text-gray-700">
-        <li><strong>Mode:</strong> Zoom / Google Meet</li>
-        <li><strong>Duration:</strong> 15–30 minutes</li>
-        <li><strong>Languages:</strong> Hindi & English</li>
-        <li><strong>Contact:</strong> +91 78275 25956</li>
-      </ul>
-
-      <p class="mt-4 text-sm text-gray-500">
-        (Consultation fee details are available below on the page.)
-      </p>
-
-    </div>
-
-  </div>
-</section>
-
-
-{% include "components/diseases.html" %}
-    <div class="max-w-5xl mx-auto px-4 mt-16">
-        <h3 class="text-3xl font-semibold text-[#003242] mb-2">
-          Why Choose Our Online Homeopathy Consultation?
-        </h3>
-
-        <ul class="list-disc pl-6 space-y-2">
-          <li>Expert doctor with proven qualifications & clinical experience</li>
-          <li>Safe, gentle, and holistic approach</li>
-          <li>No travel or waiting required</li>
-          <li>High-quality, detailed case analysis</li>
-          <li>Global access</li>
-          <li>Ethical practice with transparent communication</li>
-          <li>Complete follow-up support</li>
-        </ul>
-    </div>
-
-
-
-<section class="bg-white py-20">
-  <div class="max-w-5xl mx-auto px-4">
-
-    <!-- TITLE -->
-    <h2 class="text-3xl md:text-4xl font-bold text-primary mb-12 text-center">
-      Frequently Asked Questions (FAQs)
-    </h2>
-
-    <!-- FAQ LIST -->
-    <div class="space-y-4" id="faq-container">
-
-      <!-- FAQ ITEM -->
-      <div class="border rounded-lg">
-        <button class="faq-btn w-full text-left px-6 py-4 font-semibold text-gray-800 bg-gray-50 flex justify-between items-center">
-          Is online homeopathy consultation effective?
-          <span class="faq-icon">+</span>
-        </button>
-        <div class="faq-content hidden px-6 py-4 text-gray-700">
-          Yes, homeopathy relies on detailed case understanding, which can be effectively achieved through video consultation.
-          Many patients prefer online consultations due to convenience and accessibility.
-        </div>
-      </div>
-
-      <div class="border rounded-lg">
-        <button class="faq-btn w-full text-left px-6 py-4 font-semibold text-gray-800 bg-gray-50 flex justify-between items-center">
-          Can patients from the US and UK take online consultation?
-          <span class="faq-icon">+</span>
-        </button>
-        <div class="faq-content hidden px-6 py-4 text-gray-700">
-          Absolutely. Our online consultation is open to patients from India, US, UK, and worldwide.
-        </div>
-      </div>
-
-      <div class="border rounded-lg">
-        <button class="faq-btn w-full text-left px-6 py-4 font-semibold text-gray-800 bg-gray-50 flex justify-between items-center">
-          How do I book an appointment?
-          <span class="faq-icon">+</span>
-        </button>
-        <div class="faq-content hidden px-6 py-4 text-gray-700">
-          You can call <strong>+91 8733073586</strong> or use the appointment form available on the website.
-        </div>
-      </div>
-
-      <div class="border rounded-lg">
-        <button class="faq-btn w-full text-left px-6 py-4 font-semibold text-gray-800 bg-gray-50 flex justify-between items-center">
-          Will medicines be delivered to my location?
-          <span class="faq-icon">+</span>
-        </button>
-        <div class="faq-content hidden px-6 py-4 text-gray-700">
-          Guidance will be provided during the consultation. Local availability may vary based on country/region.
-        </div>
-      </div>
-
-    </div>
-
-    <!-- DISCLAIMER -->
-    <div class="mt-14 text-sm text-gray-600 leading-relaxed">
-      <strong>DISCLAIMER:</strong>
-      There is no guarantee of specific results and results may vary.
-      None of the remedies or services mentioned should be used without clearance from your physician or healthcare provider.
-      We do not claim to cure any disease considered incurable by modern medicine.
-      The website content is not a substitute for direct, professional medical care or diagnosis.
-    </div>
-
-    <!-- PAYMENT BUTTONS -->
-    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-
-      <a href="#"
-         class="text-center bg-[#003242] text-white px-6 py-4 rounded-lg font-semibold hover:opacity-90 transition">
-        Payment Plans for Indian Residents<br>
-        <span class="text-sm font-normal">(People staying within India)</span>
-      </a>
-
-      <a href="#"
-         class="text-center bg-[#003242] text-white px-6 py-4 rounded-lg font-semibold hover:opacity-90 transition">
-        Payment Plans for Indian Patients Abroad<br>
-        <span class="text-sm font-normal">(Indian people staying outside India)</span>
-      </a>
-
-      <a href="#"
-         class="text-center bg-[#003242] text-white px-6 py-4 rounded-lg font-semibold hover:opacity-90 transition">
-        Payment Plans for Foreign Patients<br>
-        <span class="text-sm font-normal">(People staying outside India)</span>
-      </a>
-
-    </div>
-
-  </div>
-</section>
-
-
-<script>
-  document.querySelectorAll('.faq-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const content = btn.nextElementSibling;
-      const icon = btn.querySelector('.faq-icon');
-
-      content.classList.toggle('hidden');
-      icon.textContent = content.classList.contains('hidden') ? '+' : '−';
-    });
-  });
-</script>
-
+  <script>
+    document.querySelectorAll('.faq-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const content = btn.nextElementSibling
+        const icon = btn.querySelector('.faq-icon')
+    
+        content.classList.toggle('hidden')
+        icon.textContent = content.classList.contains('hidden') ? '+' : '−'
+      })
+    })
+  </script>
 {% endblock %}

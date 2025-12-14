@@ -1,0 +1,89 @@
+# =========================
+# Python / Django
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite3
+db.sqlite3
+*.log
+*.pot
+
+# Django stuff
+*.mo
+local_settings.py
+.env
+.env.*
+.env.local
+
+# Media & Static (runtime files)
+media/
+staticfiles/
+
+# =========================
+# Virtual Environment
+# =========================
+venv/
+env/
+ENV/
+.venv/
+
+# =========================
+# Django Migrations (keep __init__.py)
+# =========================
+*/migrations/__pycache__/
+*/migrations/*.pyc
+
+# =========================
+# Docker
+# =========================
+docker-compose.override.yml
+Dockerfile.dev
+*.pid
+
+# =========================
+# Node / Frontend (if used)
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-lock.yaml
+
+# =========================
+# IDE / Editor
+# =========================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Coverage / Test
+# =========================
+htmlcov/
+.coverage
+coverage.xml
+.pytest_cache/
+
+# =========================
+# Build / Distribution
+# =========================
+build/
+dist/
+*.egg-info/
+
+# =========================
+# Temporary files
+# =========================
+*.tmp
+*.swp
+*.swo

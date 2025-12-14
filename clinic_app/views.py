@@ -1,4 +1,6 @@
 from django.shortcuts import render
+
+from clinic_app.models import ClinicInfo, Disease, Doctor, HomeopathyAbout, LiveSession
 from .forms import testimonials_reviews_forms
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -6,13 +8,29 @@ from django.shortcuts import redirect
 # Create your views here.
 
 def home_page(request):
-    return render(request, "home.html")
+    context = {
+        "doctor": Doctor.objects.filter(is_active=True).first(),
+        "diseases": Disease.objects.filter(is_active=True),
+        "videos": LiveSession.objects.filter(is_active=True),
+        "clinic": ClinicInfo.objects.first(),
+    }
+    return render(request, "home.html", context)
 
 def homeopathy_page(request):
-    return render(request, "homeopathy_page.html")
+    context = {
+        "doctor": Doctor.objects.filter(is_active=True).first(),
+        "diseases": Disease.objects.filter(is_active=True),
+        "videos": LiveSession.objects.filter(is_active=True),
+        "clinic": ClinicInfo.objects.first(),
+        "about": HomeopathyAbout.objects.filter(is_active=True).first(),
+    }
+    return render(request, "homeopathy_page.html",context)
 
 def online_consultation_page(request):
-    return render(request, "online_consultation_page.html")
+    context = {
+        "doctor": Doctor.objects.filter(is_active=True).first(),
+    }
+    return render(request, "online_consultation_page.html",context)
 
 def testimonials_page(request):
     if request.method == "POST":
