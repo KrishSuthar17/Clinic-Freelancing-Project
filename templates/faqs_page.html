@@ -1,0 +1,56 @@
+{% extends "base.html" %} 
+{% load static %}
+
+
+{% block content %}
+<!-- ================= FAQ PAGE ================= -->
+<section class="bg-gray-50 py-20">
+    <div class="max-w-5xl mx-auto px-4">
+
+        <!-- Page Title -->
+        <h1 class="text-center text-4xl md:text-5xl font-bold text-primary mb-14">
+            FAQs about Homeopathy
+        </h1>
+
+        <!-- FAQ List -->
+        <div class="bg-white border rounded-lg overflow-hidden">
+
+            {% for faq in faqs %}
+            <div class="border-b last:border-b-0">
+
+                <!-- Question -->
+                <button type="button" class="w-full flex justify-between items-center text-left px-6 py-5
+                 font-semibold text-gray-800 hover:bg-gray-50
+                 focus:outline-none faq-toggle">
+                    <span>{{ faq.question }}</span>
+                    <span class="text-xl transition-transform duration-200
+                       {% if faq.open %}rotate-90{% endif %}">
+                        ▶
+                    </span>
+                </button>
+
+                <!-- Answer -->
+                <div class="px-6 pb-6 text-gray-700 leading-relaxed
+                 {% if not faq.open %}hidden{% endif %}">
+                    {{ faq.answer }}
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+</section>
+<script>
+   document.querySelectorAll('.faq-toggle').forEach(button => {
+     button.addEventListener('click', () => {
+       const answer = button.nextElementSibling;
+       const arrow = button.querySelector('span:last-child');
+
+       answer.classList.toggle('hidden');
+       arrow.classList.toggle('rotate-90');
+     });
+   });
+ </script>
+{% endblock content %}

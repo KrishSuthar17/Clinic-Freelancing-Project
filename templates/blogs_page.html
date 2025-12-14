@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static tailwind_tags %}
+
+{% block title %}Blogs | Dr. Ketul Soni Homeopathic Clinic{% endblock %}
+
+{% block content %}
+
+<section class="bg-white py-16">
+  <div class="max-w-7xl mx-auto px-4">
+
+    <!-- MAIN GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+      <!-- ================= LEFT: BLOG CONTENT ================= -->
+      <div class="lg:col-span-2 space-y-16">
+
+        <!-- BLOG CARD -->
+        <article class="bg-white rounded-xl shadow-md overflow-hidden">
+
+          <!-- IMAGE + OVERLAY -->
+          <div class="relative">
+            <img
+              src="{% static 'images/Skin.jpg' %}"
+              alt="Skin Itching"
+              class="w-full h-80 object-cover"
+            >
+
+            <div class="absolute top-6 left-6">
+              <p class="text-sm font-semibold text-black">HOMEOPATHY FOR</p>
+              <span class="inline-block bg-black text-white text-sm font-semibold px-4 py-1 mt-1">
+                SKIN ITCHING
+              </span>
+            </div>
+          </div>
+
+          <!-- CONTENT -->
+          <div class="p-8">
+            <div class="flex flex-wrap items-center text-sm text-gray-500 gap-4 mb-4">
+              <span>📅 September 22, 2023</span>
+              <span>👨‍⚕️ Dr. Ketul Soni</span>
+              <span>💬 No Comments</span>
+            </div>
+
+            <h2 class="text-2xl font-bold text-primary mb-4">
+              Top 15 Homeopathy Medicines for Skin Itching
+            </h2>
+
+            <p class="text-gray-700 leading-relaxed mb-6">
+              Have you ever experienced that maddening sensation where you just can’t stop scratching your skin?
+              Millions of people worldwide struggle with skin itching due to allergies, rashes, eczema, and other
+              skin conditions. While conventional treatments often provide temporary relief, many people are turning
+              to homeopathy for long-term solutions...
+            </p>
+
+            <a
+              href="#"
+              class="inline-block bg-[#003242] text-white px-6 py-3 rounded-full font-semibold hover:opacity-90 transition"
+            >
+              Read More About Top 15 Homeopathy Medicines For Skin Itching
+            </a>
+          </div>
+
+        </article>
+
+        <!-- 👉 You can add more blog cards here -->
+      </div>
+
+      <!-- ================= RIGHT: STICKY DOCTOR CARD ================= -->
+      <!-- ================= RIGHT: STICKY DOCTOR CARD ================= -->
+<aside class="lg:col-span-1">
+
+  <div class="sticky top-24">
+
+    <div class="bg-white rounded-lg shadow-sm border p-5">
+
+      <h3 class="text-lg font-semibold text-primary">
+        {{ doctor.name }}
+      </h3>
+
+      <div class="w-10 h-1 bg-primary mt-2 mb-4"></div>
+
+      <div class="mb-5">
+            <img
+            src="{% static doctor.image %}"
+            alt="{{ doctor.name }}"
+            class="w-full rounded-md object-cover"
+            />
+      </div>
+
+      <h4 class="text-sm font-semibold text-primary mb-2">
+        About {{ doctor.name }}
+      </h4>
+
+      <p class="text-sm text-gray-700 leading-relaxed">
+        {{ doctor.description }}
+      </p>
+
+    </div>
+
+  </div>
+</aside>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Page Title -->
+<h1 class="text-center bg-[#F7F7F7] p-14 w-full text-4xl md:text-5xl font-bold text-primary mb-14">
+    Patient's Testimonial
+</h1>
+<section class="bg-gray-50 py-5">
+    <div class="max-w-5xl mx-auto px-4">
+
+        {% if messages %}
+          <div class="mb-6">
+            {% for message in messages %}
+              <div class="p-4 mb-4 text-sm rounded-lg
+               {% if message.tags == 'success' %}bg-green-100 text-green-700
+               {% elif message.tags == 'error' %}bg-red-100 text-red-700
+               {% else %}bg-blue-100 text-blue-700{% endif %}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <h1 class="text-center text-4xl md:text-5xl font-bold text-primary mb-14">
+            What do our Patients Say?
+        </h1>
+        <!-- FAQ List -->
+        <div class="bg-white border rounded-lg overflow-hidden">
+
+            {% for faq in faqs %}
+            <div class="border-b last:border-b-0">
+
+                <!-- Question -->
+                <button type="button" class="w-full flex justify-between items-center text-left px-6 py-5
+                 font-semibold text-gray-800 hover:bg-gray-50
+                 focus:outline-none faq-toggle">
+                    <span>{{ faq.question }}</span>
+                    <span class="text-xl transition-transform duration-200
+                       {% if faq.open %}rotate-90{% endif %}">
+                        ▶
+                    </span>
+                </button>
+
+                <!-- Answer -->
+                <div class="px-6 pb-6 text-gray-700 leading-relaxed
+                 {% if not faq.open %}hidden{% endif %}">
+                    {{ faq.answer }}
+                </div>
+
+            </div>
+            {% endfor %}
+
+            {% load static %}
+
+<!-- ================= SUBMIT REVIEW ================= -->
+<section class=" py-20">
+  <div class="max-w-4xl mx-auto px-4">
+
+    <!-- Title -->
+    <h1 class="text-4xl md:text-5xl font-bold text-primary mb-10">
+      Submit Your Review
+    </h1>
+
+    <!-- Form -->
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+
+      <div>
+    <label class="block font-medium mb-2">Rating</label>
+
+    <div class="flex gap-2" id="rating-stars">
+      {% for i in "12345" %}
+      <button type="button"
+              class="star text-3xl text-gray-300"
+              data-value="{{ forloop.counter }}">
+        ★
+      </button>
+      {% endfor %}
+    </div>
+
+    {{ form.rating.as_hidden }}
+  </div>
+        {% for field in form %}
+         {% if field.name != 'rating' %}
+          <div>
+            <label class="block font-medium mb-2">{{ field.label }}</label>
+            {{ field }}
+
+            {% if field.help_text %}
+              <p class="text-sm text-gray-500 mt-1">{{ field.help_text }}</p>
+            {% endif %}
+            {% for error in field.errors %}
+              <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+            {% endfor %}
+
+            
+          </div>
+            {% endif %}
+        {% endfor %}
+      <!-- Submit -->
+      <button
+        type="submit"
+        class="bg-gray-800 text-white px-8 py-4 rounded-full
+               hover:bg-gray-900 transition font-semibold"
+      >
+        Submit Review
+      </button>
+
+    </form>
+
+  </div>
+</section>
+
+
+        </div>
+
+    </div>
+</section>
+<script>
+   document.querySelectorAll('.faq-toggle').forEach(button => {
+     button.addEventListener('click', () => {
+       const answer = button.nextElementSibling;
+       const arrow = button.querySelector('span:last-child');
+
+       answer.classList.toggle('hidden');
+       arrow.classList.toggle('rotate-90');
+     });
+   });
+
+  const stars = document.querySelectorAll('.star');
+  const ratingInput = document.querySelector('input[name="rating"]');
+
+  stars.forEach((star, index) => {
+    star.addEventListener('click', () => {
+      ratingInput.value = index + 1;
+
+      stars.forEach((s, i) => {
+        s.classList.toggle('text-yellow-400', i <= index);
+        s.classList.toggle('text-gray-300', i > index);
+      });
+    });
+  });
+
+ </script>
+{% endblock content %}
