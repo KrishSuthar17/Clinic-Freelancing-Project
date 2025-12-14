@@ -100,7 +100,7 @@
 
 
 <h2 class="mt-16 text-center text-4xl md:text-5xl font-bold text-primary mb-16">
-    Contact Us
+    Clinic Gallery
 </h2>
 
 {% load static %}
@@ -112,30 +112,12 @@
         <!-- Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
 
-            <!-- Image 1 -->
+            {% for photo in photos %}
             <div class="overflow-hidden rounded-lg shadow-lg">
-                <img src="{% static 'images/doctor-hero.jpg' %}" alt="Waiting Area"
-                    class="w-full h-full object-cover">
+                <img src="{{ photo.image.url }}" alt="{{ photo.alt_text }}"
+                    class="w-full h-90 object-cover">
             </div>
-            
-            <!-- Image 2 -->
-            <div class="overflow-hidden rounded-lg shadow-lg">
-                <img src="{% static 'images/doctor-about.jpg' %}" alt="Doctor Cabin"
-                class="w-full h-full object-cover">
-            </div>
-            
-            <!-- Image 3 -->
-            <div class="overflow-hidden rounded-lg shadow-lg">
-                <img src="{% static 'images/clinic-image.jpg' %}" alt="Clinic Reception"
-                    class="w-full h-full object-cover">
-            </div>
-
-            <!-- Image 4 -->
-            <div class="overflow-hidden rounded-lg shadow-lg">
-                <img src="{% static 'images/logo.png' %}" alt="Clinic Interior"
-                    class="w-full h-full object-cover">
-            </div>
-
+            {% endfor %}
         </div>
 
     </div>
