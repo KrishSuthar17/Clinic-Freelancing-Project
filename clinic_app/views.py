@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .forms import testimonials_reviews_forms
 from django.contrib import messages
 from django.shortcuts import redirect
+from .models import faq, testimonials_reviews, gallery, blog, contact_gallary
 
 # Create your views here.
 
@@ -31,45 +32,13 @@ def testimonials_page(request):
 # views.py
 
 def faq_page(request):
-    faqs = [
-        {
-            "question": "What is homeopathy?",
-            "answer": (
-                "Homeopathy, a system used for over 200 years, works on the principle "
-                "that 'like cures like' — an illness is treated with a substance that "
-                "could produce similar symptoms in a healthy person. However, medicines "
-                "are given in highly diluted forms and are therefore extremely safe and "
-                "have no side effects."
-            ),
-            "open": True,  # first one open
-        },
-        {
-            "question": "What is a homeopathic consultation like?",
-            "answer": "A homeopathic consultation is detailed and individualized...",
-            "open": False,
-        },
-        {
-            "question": "What is a constitutional treatment in homeopathy?",
-            "answer": "Constitutional treatment focuses on the person as a whole...",
-            "open": False,
-        },
-        {
-            "question": "Unique nature of homeopathic prescription",
-            "answer": "Each prescription is unique to the individual...",
-            "open": False,
-        },
-        {
-            "question": "How does a homeopath choose the potency?",
-            "answer": "Potency is chosen based on multiple factors...",
-            "open": False,
-        },
-    ]
-
+    faqs = faq.objects.all()
     return render(request, "faqs_page.html", {"faqs": faqs})
 
 
 def gallery_videos_page(request):
-    return render(request, "gallery_videos_page.html")
+    videos = gallery.objects.all()
+    return render(request, "gallery_videos_page.html", {"videos": videos})
 
 def blogs_page(request):
     doctor = {
@@ -82,8 +51,10 @@ def blogs_page(request):
             "just symptoms, ensuring long-term healing and improved quality of life."
         ),
     }
+    blogs = blog.objects.all()
 
-    return render(request, "blogs_page.html", {"doctor": doctor})
+    return render(request, "blogs_page.html", {"doctor": doctor, "blogs": blogs})
 
 def content(request):
-    return render(request, "content.html")
+    photos = contact_gallary.objects.all()
+    return render(request, "content.html", {"photos": photos})

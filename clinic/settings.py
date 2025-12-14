@@ -51,6 +51,13 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
+# for youtube videos in iframes
+CSP_FRAME_SRC = (
+    "'self'",
+    "https://www.youtube.com",
+    "https://www.youtube-nocookie.com",
+)
+
 
 STATIC_ROOT = BASE_DIR / "staticfiles"  # for production
 
