@@ -27,3 +27,15 @@ admin.site.register(contact_gallary)
 class contact_gallaryAdmin(admin.ModelAdmin):
     list_display = ('image',)
     search_fields = ('image',)
+
+
+
+# admin.py (all apps)
+from django.contrib import admin
+from .models import *
+
+admin.site.register(Doctor)
+admin.site.register(Disease)
+admin.site.register(LiveSession)
+admin.site.register(ClinicInfo)
+admin.site.register(HomeopathyAbout)

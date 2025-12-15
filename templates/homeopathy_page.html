@@ -18,7 +18,7 @@
         </p>
 
         <!-- Paragraphs -->
-        <div class="space-y-6 text-base md:text-lg leading-relaxed text-center">
+        <div class="space-y-6 text-base md:text-lg leading-relaxed text-left">
             <p>
                 The practice of Homeopathy is based upon science while its application
                 is an art. Before the medicines are decided upon, their curative
@@ -27,10 +27,7 @@
                 termed a ‘proving’. This information constitutes the basis for ‘like
                 cures like’, for a medicine’s unique symptom picture must match up
                 with the individual’s unique expression of their disease, that is,
-                the present and persisting symptoms of the disease.
-            </p>
-
-            <p>
+                the present and persisting symptoms of the disease.<br>
                 The second principle, that only ‘the minimum dose’ should be employed
                 is based upon the understanding that the stimulus of the medicine
                 works from within the vitality and is not imposed from the outside.
@@ -39,9 +36,38 @@
 
     </div>
 </section>
+<section>
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 px-4 py-20 items-center">
 
+    <!-- LEFT IMAGE -->
+    <div>
+      
+        <img src="{{ doctor.image.url }}"
+             alt="{{ doctor.name }}"
+             class="rounded-lg" />
+      
+    </div>
 
-{% include "components/Stating_about.html" %}
+    <!-- RIGHT CONTENT -->
+    <div>
+
+      <h2 class="text-4xl md:text-5xl font-bold text-primary leading-tight mb-6">
+        {{ about.heading }}
+      </h2>
+
+      <ul class="space-y-1.5 text-gray-900 leading-relaxed list-disc pl-5">
+        {% for point in about.points.splitlines %}
+          <li class="{% if forloop.first %}font-extrabold{% endif %}">
+            {{ point }}
+          </li>
+        {% endfor %}
+      </ul>
+
+    </div>
+
+  </div>
+</section>
+
 
 {% include "components/diseases.html" %}
 {% include "components/about.html" %}

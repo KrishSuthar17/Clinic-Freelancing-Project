@@ -9,36 +9,30 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
 
-      {% for video in videos %}
-      <div class="bg-white border rounded-lg overflow-hidden shadow-sm">
+            {% for video in videos %}
+            <div class="bg-white border rounded-lg overflow-hidden shadow-sm">
 
-        <!-- Responsive YouTube Embed -->
-        <div class="relative aspect-video bg-black rounded overflow-hidden">
-            <iframe
-                src="https://www.youtube.com/embed/{{ video.youtube_id }}"
-                class="absolute inset-0 w-full h-full"
-                allowfullscreen>
-            </iframe>
+                <!-- Responsive Iframe -->
+                <div class="relative w-full aspect-video">
+                    {% comment %} <iframe class="absolute inset-0 w-full h-full"
+                        src="https://www.youtube.com/embed/{{ video.youtube_id }}" title="{{ video.title }}"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe> {% endcomment %}
+                    <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/{{ video.youtube_id }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
 
-            <!-- Fallback overlay -->
-            <a
-                href="https://www.youtube.com/watch?v={{ video.youtube_id }}"
-                target="_blank"
-                class="absolute inset-0 flex items-center justify-center
-                    bg-black/60 text-white text-sm opacity-0 hover:opacity-100 transition">
-                Watch on YouTube
-            </a>
+                <!-- Title -->
+                <div class="p-5 text-center">
+                    <h3 class="text-xl font-semibold text-primary">
+                             {{ video.title }}
+                    </h3>
+                </div>
+
             </div>
-
-
-        <div class="p-5 text-center">
-          <h3 class="text-xl font-semibold text-primary">
-            {{ video.title }}
-          </h3>
+            {% endfor %}
         </div>
-
-      </div>
-      {% endfor %}
 
     </div>
   </div>
