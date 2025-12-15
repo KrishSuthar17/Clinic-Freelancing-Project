@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'theme',
     'django_browser_reload',
     'clinic_app',
+    'ckeditor'
 ]
 
 TAILWIND_APP_NAME = "theme"

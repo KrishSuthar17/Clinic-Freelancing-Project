@@ -4,7 +4,7 @@ from clinic_app.models import ClinicInfo, Disease, Doctor, HomeopathyAbout, Live
 from .forms import testimonials_reviews_forms
 from django.contrib import messages
 from django.shortcuts import redirect
-from .models import faq, testimonials_reviews, gallery, blog, contact_gallary
+from .models import Homeopathy_end_about_content, Homeopathy_start_about_content, faq, testimonials_reviews, gallery, blog, contact_gallary
 
 # Create your views here.
 
@@ -14,6 +14,8 @@ def home_page(request):
         "diseases": Disease.objects.filter(is_active=True),
         "videos": LiveSession.objects.filter(is_active=True),
         "clinic": ClinicInfo.objects.first(),
+       
+        
     }
     return render(request, "home.html", context)
 
@@ -24,6 +26,8 @@ def homeopathy_page(request):
         "videos": LiveSession.objects.filter(is_active=True),
         "clinic": ClinicInfo.objects.first(),
         "about": HomeopathyAbout.objects.filter(is_active=True).first(),
+        "homeopathy_about1": Homeopathy_start_about_content.objects.first(),
+        "homeopathy_about2": Homeopathy_end_about_content.objects.first(),
     }
     return render(request, "homeopathy_page.html",context)
 

@@ -117,3 +117,21 @@ class HomeopathyAbout(models.Model):
 
     def __str__(self):
         return self.heading
+    
+
+class Homeopathy_start_about_content(models.Model):
+    about_heading = models.CharField(max_length=200)   
+    about_text = models.TextField()      
+
+    def __str__(self):
+        return "Homeopathy_start_about_content"
+    
+from ckeditor.fields import RichTextField
+class Homeopathy_end_about_content(models.Model):
+    about_heading = models.CharField(max_length=200)   
+    about_text = RichTextField()
+
+    def __str__(self):
+        return "Homeopathy_end_about_content"
+    
+

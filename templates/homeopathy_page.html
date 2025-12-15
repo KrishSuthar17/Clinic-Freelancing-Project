@@ -4,7 +4,35 @@
 {% block title %}Homeopathy | Dr.Ketul Soni Homeopathic Clinic{% endblock %}
 
 {% block content %}
-{% include "components/about.html" %}
+<section class="bg-white py-20">
+    <div class="max-w-7xl mx-auto px-4">
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+            <!-- LEFT CONTENT -->
+            <div>
+                <h2 class="text-4xl md:text-5xl font-bold text-primary leading-tight mb-6">
+                    {{ homeopathy_about1.about_heading }}
+                </h2>
+
+                <p class="text-gray-700 leading-relaxed text-lg">
+                    {{ homeopathy_about1.about_text }}
+                </p>
+            </div>
+
+            <!-- RIGHT IMAGE -->
+            <div class="flex justify-center lg:justify-end">
+                {% if doctor.image %}
+                    <img src="{{ doctor.image.url }}"
+                         alt="{{ doctor.name }}"
+                         class="rounded-lg shadow-lg max-w-full h-auto">
+                {% endif %}
+            </div>
+
+        </div>
+
+    </div>
+</section>
 
 <!-- ================= HOMEOPATHY PHILOSOPHY SECTION ================= -->
 <section class="bg-[#003242] py-16 md:py-20">
@@ -70,7 +98,39 @@
 
 
 {% include "components/diseases.html" %}
-{% include "components/about.html" %}
+
+<section class="bg-white py-20">
+    <div class="max-w-7xl mx-auto px-4">
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+            <!-- LEFT CONTENT -->
+            <div>
+                <h2 class="text-4xl md:text-5xl font-bold text-primary leading-tight mb-6">
+                    {{ homeopathy_about2.about_heading }}
+                </h2>
+
+                <p class="text-gray-700 leading-relaxed text-lg">
+                    {{ homeopathy_about2.about_text | safe }}
+                </p>
+            </div>
+
+            <!-- RIGHT IMAGE -->
+            <div class="flex justify-center lg:justify-end">
+                {% if doctor.image %}
+                    <img src="{{ doctor.image.url }}"
+                         alt="{{ doctor.name }}"
+                         class="rounded-lg shadow-lg max-w-full h-auto">
+                {% endif %}
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+
 {% include "components/cta.html" %}
 
 {% endblock %}
