@@ -123,13 +123,16 @@
 
             {% for photo in photos %}
             <div class="overflow-hidden rounded-lg shadow-lg">
-                <img src="{{ photo.image.url }}" alt="{{ photo.alt_text }}" class="w-full h-90 object-cover">
+               <img src="{{ photo.image.url }}"
+           alt="{{ photo.alt_text|default:'Clinic photo' }}"
+           class="w-full h-90 object-cover">
             </div>
             {% endfor %}
         </div>
 
     </div>
 </section>
+
 
 
 {% endblock %}
