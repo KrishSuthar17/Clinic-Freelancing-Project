@@ -122,12 +122,12 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
 
             {% for photo in photos %}
-            <div class="overflow-hidden rounded-lg shadow-lg">
-               <img src="{{ photo.image.url }}"
-           alt="{{ photo.alt_text|default:'Clinic photo' }}"
-           class="w-full h-90 object-cover">
-            </div>
-            {% endfor %}
+  {% if photo.image %}
+    <img src="{{ photo.image.url }}"
+         alt="{{ photo.alt_text|default:'Clinic photo' }}"
+         class="w-full h-90 object-cover">
+  {% endif %}
+{% endfor %}
         </div>
 
     </div>
@@ -136,3 +136,4 @@
 
 
 {% endblock %}
+
