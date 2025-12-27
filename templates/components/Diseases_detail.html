@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="bg-gray-50 min-h-screen py-20 px-6">
+  
+  {% if selected_disease %}
+    <div class="max-w-5xl mx-auto">
+
+      <!-- Title -->
+      <h1 class="text-center text-4xl md:text-5xl font-bold text-[#003242] mb-10">
+        {{ selected_disease.name }}
+      </h1>
+
+      <!-- Content -->
+      <div class="bg-white rounded-xl shadow-sm p-10 md:p-14">
+        <div class="prose text-center prose-gray max-w-none text-[17px] leading-relaxed">
+          {{ selected_disease.description|linebreaks }}
+        </div>
+      </div>
+
+    </div>
+  {% else %}
+    <p class="text-center text-gray-500 text-lg">
+      Select a disease to view details
+    </p>
+  {% endif %}
+
+</div>
+
+{% endblock content %}

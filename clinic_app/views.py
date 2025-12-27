@@ -3,7 +3,7 @@ from django.shortcuts import render
 from clinic_app.models import ClinicInfo, Disease, Doctor, HomeopathyAbout, LiveSession
 from .forms import testimonials_reviews_forms
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import redirect,get_object_or_404
 from .models import Homeopathy_end_about_content, Homeopathy_start_about_content, faq, testimonials_reviews, gallery, blog, contact_gallary
 
 # Create your views here.
@@ -82,3 +82,16 @@ def blogs_page(request):
 def content(request):
     photos = contact_gallary.objects.all()
     return render(request, "content.html", {"photos": photos})
+
+
+def disease_page(request, slug=None):
+    diseases = Disease.objects.all()
+    selected_disease = None
+
+    if slug:
+        selected_disease = get_object_or_404(Disease, slug=slug)
+
+    return render(request, "components/Diseases_detail.html", {
+    "diseases": diseases,
+    "selected_disease": selected_disease,
+    })

@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from ckeditor.fields import RichTextField
 
 
 # Create your models here.
@@ -48,8 +49,6 @@ class blog(models.Model):
 class contact_gallary(models.Model):
     image = models.ImageField(upload_to='media/', null=True, blank=True)
     
-# doctors/models.py
-from django.db import models
 
 class Doctor(models.Model):
     name = models.CharField(max_length=100)
@@ -73,6 +72,8 @@ class Doctor(models.Model):
 class Disease(models.Model):
     name = models.CharField(max_length=100)
     icon = models.ImageField(upload_to="diseases/")
+    slug = models.SlugField(max_length=100, blank=True, null=True)
+    description = models.TextField(max_length=300, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     
 
@@ -90,7 +91,6 @@ class LiveSession(models.Model):
         return self.title
 
 
-# settings/models.py
 # settings/models.py
 class ClinicInfo(models.Model):
     clinic_name = models.CharField(max_length=100)
@@ -125,8 +125,7 @@ class Homeopathy_start_about_content(models.Model):
 
     def __str__(self):
         return "Homeopathy_start_about_content"
-    
-from ckeditor.fields import RichTextField
+
 class Homeopathy_end_about_content(models.Model):
     about_heading = models.CharField(max_length=200)   
     about_text = RichTextField()

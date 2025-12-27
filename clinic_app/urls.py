@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home_page, homeopathy_page,blogs_page,content,faq_page,gallery_videos_page,online_consultation_page,testimonials_page
+from .views import *
 
 urlpatterns = [
     path('', home_page, name='home'),
@@ -10,4 +10,5 @@ urlpatterns = [
     path('gallery_videos/', gallery_videos_page, name='gallery_videos'),
     path('blogs/', blogs_page, name='blogs'),
     path('content/', content, name='content'),
+    path("diseases/<slug:slug>/", disease_page, name="disease_detail"),
 ]
