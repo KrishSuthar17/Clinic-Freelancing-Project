@@ -9,31 +9,33 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
 
-            {% for video in videos %}
-            <div class="bg-white border rounded-lg overflow-hidden shadow-sm">
+      {% for video in videos %}
+      <div class="bg-white border rounded-lg overflow-hidden shadow-sm">
 
-                <!-- Responsive Iframe -->
-                <div class="relative w-full aspect-video">
-                    {% comment %} <iframe class="absolute inset-0 w-full h-full"
-                        src="https://www.youtube.com/embed/{{ video.youtube_id }}" title="{{ video.title }}"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe> {% endcomment %}
-                    <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/{{ video.youtube_id }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                </div>
-
-                <!-- Title -->
-                <div class="p-5 text-center">
-                    <h3 class="text-xl font-semibold text-primary">
-                             {{ video.title }}
-                    </h3>
-                </div>
-
-            </div>
-            {% endfor %}
+        <!-- Responsive Iframe -->
+        <div class="relative w-full aspect-video">
+          {% comment %} <iframe class="absolute inset-0 w-full h-full"
+            src="https://www.youtube.com/embed/{{ video.youtube_id }}" title="{{ video.title }}" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe> {% endcomment %}
+          <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/{{ video.youtube_id }}"
+            title="YouTube video player" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
 
+        <!-- Title -->
+        <div class="p-5 text-center">
+          <h3 class="text-xl font-semibold text-primary">
+            {{ video.title }}
+          </h3>
+        </div>
+
+      </div>
+      {% endfor %}
     </div>
+
+  </div>
   </div>
 </section>

@@ -1,7 +1,7 @@
 {% load static tailwind_tags %}
 <!-- ================= HERO SECTION ================= -->
-<section class="bg-gray-50">
-  <div class="max-w mx-auto grid md:grid-cols-2 gap-10 px-4 py-20 items-center">
+<section class="bg-gray-50 ">
+  <div class="max-w mx-auto grid md:grid-cols-2  gap-10 px-4 items-center">
     <!-- Left Content -->
     <div>
       <h1 class="text-4xl md:text-5xl font-bold text-primary mb-6">{{ clinic.clinic_name }}</h1>
@@ -9,15 +9,19 @@
       <p class="text-lg mb-8">"{{ clinic.tagline|upper }}"</p>
 
       <div class="flex gap-4">
-        <a href="{{ clinic.phone }}" class="border-2 border-primary text-primary px-6 py-3 font-semibold hover:bg-primary hover:text-amber-600 transition">Call Now</a>
+        <a href="{{ clinic.phone }}"
+          class="border-2 border-primary text-primary px-6 py-3 font-semibold hover:bg-primary hover:text-amber-600 transition">Call
+          Now</a>
 
-        <a href="#" class="bg-amber-600 text-white px-6 py-3 font-semibold hover:opacity-90 transition">Book Clinic Appointment Now</a>
+        <a href="#" class="bg-amber-600 text-white px-6 py-3 font-semibold hover:opacity-90 transition">Book Clinic
+          Appointment Now</a>
       </div>
     </div>
 
     <!-- Right Image -->
     <div class="relative">
-      <img src="{{ doctor.image.url }}" alt="Dr Pratibha Tanwar" class="rounded-lg w-full" />
+      <div class="h-130 w-3xs bg-[#F9FAFB] absolute rotate-25 right-200 rounded-tl-full bottom-5"></div>
+      <img src="{{ doctor.image.url }}" alt="Dr Ketul Soni" class="rounded-lg w-full h-115" />
     </div>
   </div>
 </section>

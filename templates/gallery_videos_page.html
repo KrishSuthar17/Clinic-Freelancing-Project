@@ -2,8 +2,42 @@
 {% load static tailwind_tags %}
 
 {% block content %}
-{% include "components/live_Sessions.html" %}
+<section class="bg-gray-100 py-20">
+    <div class="max-w-7xl mx-auto px-4">
 
+        <h2 class="text-center text-4xl md:text-5xl font-bold text-primary mb-16">
+            Live Sessions
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+
+            {% for video in videos %}
+            <div class="bg-white  border rounded-lg overflow-hidden shadow-sm">
+
+                <!-- Responsive Iframe -->
+                <div class="relative  w-full aspect-video">
+                    {% comment %} <iframe class="shadow-2xl shadow-lime-300 absolute inset-0 w-full h-full"
+                        src="https://www.youtube.com/embed/{{ video.youtube_id }}" title="{{ video.title }}"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe> {% endcomment %}
+                    <iframe class="absolute inset-0 w-full h-full"
+                        src="https://www.youtube.com/embed/{{ video.youtube_id }}" title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+
+                <!-- Title -->
+
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+    </div>
+</section>
 
 
 <section class="bg-[#003242] py-20">

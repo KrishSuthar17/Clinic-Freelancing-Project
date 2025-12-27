@@ -34,10 +34,12 @@ def homeopathy_page(request):
 def online_consultation_page(request):
     context = {
         "doctor": Doctor.objects.filter(is_active=True).first(),
+        "diseases": Disease.objects.filter(is_active=True),
     }
     return render(request, "online_consultation_page.html",context)
 
 def testimonials_page(request):
+    faqs = faq.objects.all()
     if request.method == "POST":
         form = testimonials_reviews_forms(request.POST)
         if form.is_valid():
@@ -49,7 +51,7 @@ def testimonials_page(request):
     else:
         form = testimonials_reviews_forms()
 
-    return render(request, "testimonials_page.html", {"form": form})
+    return render(request, "testimonials_page.html", {"form": form, "faqs": faqs})
 
 # views.py
 
