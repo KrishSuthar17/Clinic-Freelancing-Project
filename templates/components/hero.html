@@ -1,5 +1,14 @@
 {% load static tailwind_tags %}
 <!-- ================= HERO SECTION ================= -->
+
+<style>
+  @media (max-width:768px) {
+    .hid-me{
+      display: none;
+    }
+  }
+</style>
+
 <section class="bg-gray-50 ">
   <div class="max-w mx-auto grid md:grid-cols-2  gap-10 px-4 items-center">
     <!-- Left Content -->
@@ -9,19 +18,22 @@
       <p class="text-lg mb-8">"{{ clinic.tagline|upper }}"</p>
 
       <div class="flex gap-4">
-        <a href="{{ clinic.phone }}"
-          class="border-2 border-primary text-primary px-6 py-3 font-semibold hover:bg-primary hover:text-amber-600 transition">Call
-          Now</a>
+        <a href="tel:+918733073586"
+          class="border-1 rounded-2xl border-primary text-center text-primary px-6 py-3 font-semibold hover:bg-primary hover:text-amber-600 transition"
+          aria-label="Call">
+          Call Now 📞
+        </a>
 
-        <a href="#" class="bg-amber-600 text-white px-6 py-3 font-semibold hover:opacity-90 transition">Book Clinic
+
+        <a href="#" class="bg-amber-600 rounded-2xl text-white px-6 py-3 font-semibold hover:opacity-90 transition">Book
+          Clinic
           Appointment Now</a>
       </div>
     </div>
 
     <!-- Right Image -->
     <div class="relative">
-      <div class="h-130 w-3xs bg-[#F9FAFB] absolute rotate-25 right-200 rounded-tl-full bottom-5"></div>
-      <img src="{{ doctor.image.url }}" alt="Dr Ketul Soni" class="rounded-lg w-full h-115" />
+      <img src="{{ doctor.image.url }}" alt="Dr Ketul Soni" class="rounded-lg w-full h-115 hid-me" />
     </div>
   </div>
 </section>

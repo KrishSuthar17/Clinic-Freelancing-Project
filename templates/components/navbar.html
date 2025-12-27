@@ -1,5 +1,36 @@
 {% load static tailwind_tags %}
 {% load static tailwind_tags %}
+
+<style>
+    #hamburger {
+        display: none;
+    }
+
+    @media (max-width: 768px) {
+        #hamburger {
+            display: block;
+        }
+
+        .nav-links {
+            color: white;
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: #0e4b5ad0;
+            border-radius: 15px;
+            width: 200px;
+            flex-direction: column;
+            padding: 15px;
+            display: none;
+            z-index: 9;
+            /* hidden by default */
+        }
+
+        .nav-links.show {
+            display: flex;
+        }
+    }
+</style>
 <div class="w-full bg-[#0e4b5a] flex justify-between text-white">
 
     <div class="max-w-7xl mx-auto flex gap-4 bg-primary text-primary-foreground text-sm py-2">
@@ -25,8 +56,13 @@
             <img src="{% static 'images/doctor-hero.jpg' %}" alt="Clinic Logo" class="h-12 rounded-full">
         </div>
 
+        <!-- Hamburger button (mobile only) -->
+        <button id="hamburger">
+            ☰
+        </button>
+
         <!-- Navigation -->
-        <nav class="hidden md:flex gap-6 font-semibold text-primary">
+        <nav class="hidden md:flex gap-6 font-semibold text-primary nav-links" id="navLinks">
             <a href="{% url 'home' %}">Home</a>
             <a href="{% url 'homeopathy' %}">Homeopathy</a>
             <a href="{% url 'online_consultation' %}">Online Consultation</a>
