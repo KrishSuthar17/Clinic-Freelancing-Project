@@ -115,6 +115,7 @@
 {% load static %}
 
 <!-- ================= CLINIC GALLERY ================= -->
+
 <section class="bg-white py-20">
     <div class="max-w-7xl mx-auto px-4">
 
@@ -122,14 +123,22 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
 
             {% for photo in photos %}
-            <div class="overflow-hidden rounded-lg shadow-lg">
-                <img src="{{ photo.image.url }}" alt="{{ photo.alt_text }}" class="w-full h-90 object-cover">
-            </div>
-            {% endfor %}
+  {% if photo.image %}
+    <img src="{{ photo.image.url }}" alt="{{ photo.alt_text }}" class="w-full h-90 object-cover">
+{% else %}
+    <div class="w-full h-90 bg-gray-200 flex items-center justify-center text-gray-500">
+        No image available
+    </div>
+{% endif %}
+
+{% endfor %}
         </div>
 
     </div>
 </section>
 
-
 {% endblock %}
+
+
+
+
