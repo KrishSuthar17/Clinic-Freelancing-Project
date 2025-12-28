@@ -1,8 +1,37 @@
 {% extends "base.html" %}
-{% load static  %}
+{% load static %}
 
 {% block content %}
 
+<div class="bg-white py-20 px-6">
+  <article class="max-w-4xl mx-auto">
 
+
+    <!-- Title -->
+    <h1 class="text-3xl md:text-4xl font-bold text-[#003242] mb-6">
+      {{ blog.title }}
+    </h1>
+
+    <!-- Meta info -->
+    <div class="text-sm text-gray-600 space-y-1 mb-6">
+      <p>
+        Written by 
+        <span class="text-blue-600 font-medium">{{ blog.author }}</span>
+        (BHMS – Homeopathy Specialist)
+      </p>
+      <p>
+        Medically reviewed by 
+        <span class="text-blue-600 font-medium">{{ blog.author }}</span>
+      </p>
+      <p>Published on : {{ blog.created_at }}</p>
+    </div>
+
+    <!-- Intro paragraphs -->
+    <div class="text-gray-800 leading-relaxed space-y-5 text-[17px]">
+      <p> 
+       {{ blog.content }}
+      </p>
+  </article>
+</div>
 
 {% endblock %}

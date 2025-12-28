@@ -7,13 +7,25 @@
 
             <!-- LEFT CONTENT -->
             <div>
-                <h2 class="text-4xl md:text-5xl font-bold text-primary leading-tight mb-6">
-                    {{ clinic.about_heading }}
-                </h2>
+                {% if clinic.about_heading %}
+                    <h2 class="text-4xl md:text-5xl font-bold text-primary leading-tight mb-6">
+                        {{ clinic.about_heading }}
+                    </h2>
+                {% else %}
+                    <h2 class="text-4xl md:text-5xl font-bold text-primary leading-tight mb-6">
+                        About Dr. Ketul Soni Homeopathic Clinic
+                    </h2>
+                {% endif %}
 
+                {% if clinic.about_text %}
+                    <p class="text-gray-700 leading-relaxed text-lg">
+                        {{ clinic.about_text }}
+                    </p>
+                {% else %}
                 <p class="text-gray-700 leading-relaxed text-lg">
-                    {{ clinic.about_text }}
+                   Data Not Found
                 </p>
+                {% endif %}                    
             </div>
 
             <!-- RIGHT IMAGE -->
@@ -22,6 +34,8 @@
                     <img src="{{ doctor.image.url }}"
                          alt="{{ doctor.name }}"
                          class="rounded-lg shadow-lg max-w-full h-auto">
+                {% else %}
+                    <p>Data Not Found</p>
                 {% endif %}
             </div>
 

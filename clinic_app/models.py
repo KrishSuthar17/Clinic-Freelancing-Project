@@ -38,8 +38,10 @@ class blog(models.Model):
     id = models.AutoField(primary_key=True)
     min_title = models.CharField(max_length=200,null=False)
     title = models.CharField(max_length=200,null=False)
+    slug = models.SlugField(max_length=255,null=True,blank=True,unique=True)
+    description = models.TextField(max_length=300, null=True, blank=True)
     content = models.TextField(max_length=5000,null=False)
-    image = models.ImageField(upload_to='media/', null=True, blank=True)
+    image = models.ImageField(upload_to='media/', null=False, default="doctor-hero.jpg")
     author = models.CharField(max_length=100,null=False,default="Dr. Ketul Soni")
     created_at = models.DateTimeField(auto_now=True)
 
@@ -47,7 +49,7 @@ class blog(models.Model):
         return self.title
     
 class contact_gallary(models.Model):
-    image = models.ImageField(upload_to='media/', null=True, blank=True)
+    image = models.ImageField(upload_to='media/', null=False, default="doctor-hero.jpg")
     
 
 class Doctor(models.Model):
@@ -55,7 +57,7 @@ class Doctor(models.Model):
     qualification = models.CharField(max_length=200)
     experience_years = models.PositiveIntegerField()
     specialization = models.TextField()
-    image = models.ImageField(upload_to="doctors/")
+    image = models.ImageField(upload_to="doctors/", null=False, default="doctor-hero.jpg")
     is_active = models.BooleanField(default=True)
 
     
@@ -72,7 +74,7 @@ class Doctor(models.Model):
 class Disease(models.Model):
     name = models.CharField(max_length=100)
     icon = models.ImageField(upload_to="diseases/")
-    slug = models.SlugField(max_length=100, blank=True, null=True)
+    slug = models.SlugField(max_length=100, unique=True, default="Disease")
     description = models.TextField(max_length=300, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     

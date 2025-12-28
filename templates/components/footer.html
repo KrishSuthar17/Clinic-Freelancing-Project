@@ -24,12 +24,12 @@
                     <span class="text-orange-400">|</span> QUICK LINKS
                 </h4>
                 <ul class="space-y-2 text-gray-200">
-                    <li>› Homeopathy</li>
-                    <li>› Testimonials</li>
-                    <li>› Gallery/Video</li>
-                    <li>› About the Doctor</li>
-                    <li>› Medical Disclaimer</li>
-                    <li>› Editorial Policy</li>
+                    <a href="{% url 'homeopathy' %}"><li>› Homeopathy</li></a>
+                    <a href="{% url 'testimonials' %}"><li>› Testimonials</li></a>
+                    <a href="{% url 'gallery_videos' %}"><li>› Gallery/Video</li></a>
+                    {% comment %} <a href="{% url 'homeopathy' %}"><li>› About the Doctor</li></a>
+                    <a href="{% url 'medical_disclaimer' %}"><li>› Medical Disclaimer</li></a> 
+                    <a href="{% url 'editorial_policy' %}"><li>› Editorial Policy</li></a>{% endcomment %}
                 </ul>
             </div>
 
@@ -39,12 +39,12 @@
                     <span class="text-orange-400">|</span> OTHER LINKS
                 </h4>
                 <ul class="space-y-2 text-gray-200">
-                    <li>› Online Consultation</li>
-                    <li>› Treatments</li>
-                    <li>› Book Consultation</li>
-                    <li>› FAQs</li>
-                    <li>› Blogs</li>
-                    <li>› Sitemap</li>
+                    <a href="{% url 'online_consultation' %}"><li>› Online Consultation</li></a>
+                    <a href="#"><li>› Treatments</li></a>
+                    <a href="#"><li>› Book Consultation</li></a>
+                    <a href="{% url 'faqs' %}"><li>› FAQs</li></a>
+                    <a href="{% url 'blogs' %}"><li>› Blogs</li></a>
+                    {% comment %} <a href="{% url 'sitemap' %}"><li>› Sitemap</li></a> {% endcomment %}
                 </ul>
             </div>
 

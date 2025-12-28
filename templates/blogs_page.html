@@ -20,11 +20,7 @@
 
           <!-- IMAGE + OVERLAY -->
           <div class="relative">
-            <img
-              src="{{ blog.image.url }}"
-              alt="Skin Itching"
-              class="w-full h-80 object-cover"
-            >
+            <img src="{{ blog.image.url }}" alt="Skin Itching" class="w-full h-80 object-cover">
 
             <div class="absolute top-6 left-6">
               <p class="text-sm font-semibold text-black">HOMEOPATHY FOR</p>
@@ -47,13 +43,12 @@
             </h2>
 
             <p class="text-gray-700 leading-relaxed mb-6">
-              {{ blog.content }}
+              {{ blog.description }}
             </p>
 
-            <a
-              href="#"
-              class="inline-block bg-[#003242] text-white px-6 py-3 rounded-full font-semibold hover:opacity-90 transition"
-            >
+            <a href="{% url 'blog_detail' slug=blog.slug %}"
+              class="inline-block bg-[#003242] text-white px-6 py-3 rounded-full font-semibold hover:opacity-90 transition">
+
               Read More About Top 15 Homeopathy Medicines For Skin Itching
             </a>
           </div>
@@ -66,38 +61,34 @@
 
       <!-- ================= RIGHT: STICKY DOCTOR CARD ================= -->
       <!-- ================= RIGHT: STICKY DOCTOR CARD ================= -->
-<aside class="lg:col-span-1">
+      <aside class="lg:col-span-1">
 
-  <div class="sticky top-24">
+        <div class="sticky top-24">
 
-    <div class="bg-white rounded-lg shadow-sm border p-5">
+          <div class="bg-white rounded-lg shadow-sm border p-5">
 
-      <h3 class="text-lg font-semibold text-primary">
-        {{ doctor.name }}
-      </h3>
+            <h3 class="text-lg font-semibold text-primary">
+              {{ doctor.name }}
+            </h3>
 
-      <div class="w-10 h-1 bg-primary mt-2 mb-4"></div>
+            <div class="w-10 h-1 bg-primary mt-2 mb-4"></div>
 
-      <div class="mb-5">
-            <img
-            src="{% static doctor.image %}"
-            alt="{{ doctor.name }}"
-            class="w-full rounded-md object-cover"
-            />
-      </div>
+            <div class="mb-5">
+              <img src="{% static doctor.image %}" alt="{{ doctor.name }}" class="w-full rounded-md object-cover" />
+            </div>
 
-      <h4 class="text-sm font-semibold text-primary mb-2">
-        About {{ doctor.name }}
-      </h4>
+            <h4 class="text-sm font-semibold text-primary mb-2">
+              About {{ doctor.name }}
+            </h4>
 
-      <p class="text-sm text-gray-700 leading-relaxed">
-        {{ doctor.description }}
-      </p>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              {{ doctor.description }}
+            </p>
 
-    </div>
+          </div>
 
-  </div>
-</aside>
+        </div>
+      </aside>
 
     </div>
   </div>

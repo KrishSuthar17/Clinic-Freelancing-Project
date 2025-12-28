@@ -95,3 +95,8 @@ def disease_page(request, slug=None):
     "diseases": diseases,
     "selected_disease": selected_disease,
     })
+
+
+def blog_detail(request, slug):
+    blog_obj = get_object_or_404(blog, slug=slug)
+    return render(request, 'components/Blog_details.html', {'blog': blog_obj})
