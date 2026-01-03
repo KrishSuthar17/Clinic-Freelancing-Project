@@ -1,7 +1,9 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from ckeditor.fields import RichTextField
-
+from django.core.validators import RegexValidator
+import uuid
+from django.utils.timezone import now
 
 # Create your models here.
 
@@ -136,3 +138,96 @@ class Homeopathy_end_about_content(models.Model):
         return "Homeopathy_end_about_content"
     
 
+
+class Appointment(models.Model):
+    STATUS_CHOICES = [
+        ('pending','Pending'),
+        ('confirmed','Confirmed'),
+        ('cancelled', 'Cancelled')
+    ]
+    patient_name = models.CharField(max_length=100)
+    phone = models.CharField(
+        max_length=10,
+        validators=[RegexValidator(r'^[6-9]\d{9}$', 'Invalid phone number')]
+    )
+    doctor = models.ForeignKey(Doctor,on_delete=models.CASCADE)
+    date = models.DateField()
+    time_slot =models.TimeField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES,default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    # DATA RETENTION FIELDS
+    is_anonymized = models.BooleanField(default=False)
+    is_archived = models.BooleanField(default=False)
+    anonymized_at = models.DateTimeField(null=True, blank=True)
+
+    idempotency_key = models.UUIDField(unique=True, editable=False,default=uuid.uuid4,)
+
+    class Meta:
+        unique_together = ('doctor', 'date', 'time_slot')
+
+    def save(self, *args, **kwargs):
+        if not self.idempotency_key:
+            self.idempotency_key = uuid.uuid4()
+        super().save(*args, **kwargs)
+
+
+class Device(models.Model):
+    USER_TYPE = [
+        ('doctor','Doctor'),
+        ('patient','Patient')
+    ]
+
+    user_type = models.CharField( max_length=10,choices=USER_TYPE)
+    user_id = models.IntegerField()
+    fcm_token = models.TextField(unique=True)
+    is_active = models.BooleanField(default=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user_type}-{self.user_id}"
+    
+
+class Notification(models.Model):
+    RECIPIENT = [
+        ('doctor', 'Doctor'),
+        ('patient', 'Patient'),
+    ]
+
+    recipient_type = models.CharField(max_length=10, choices=RECIPIENT)
+    recipient_id = models.IntegerField()
+    title = models.CharField(max_length=200)
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+
+
+
+
+class AuditLog(models.Model):
+    ACTION_CHOICES = [
+        ('BOOK_ATTEMPT', 'Book Attempt'),
+        ('BOOK_SUCCESS', 'Book Success'),
+        ('BOOK_FAIL', 'Book Fail'),
+        ('OTP_SENT', 'OTP Sent'),
+        ('OTP_VERIFIED', 'OTP Verified'),
+        ('RATE_LIMIT_BLOCK', 'Rate Limit Block'),
+        ('CAPTCHA_FAIL', 'Captcha Fail'),
+    ]
+
+    action = models.CharField(max_length=50, choices=ACTION_CHOICES)
+    phone = models.CharField(max_length=15, null=True, blank=True)
+    ip_address = models.GenericIPAddressField()
+    user_agent = models.TextField()
+    meta = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(default=now)
+
+    def __str__(self):
+        return f"{self.action} - {self.phone}"
+    
+
+class RateLimit(models.Model):
+    phone = models.CharField(max_length=15)
+    ip_address = models.GenericIPAddressField()
+    count = models.PositiveIntegerField(default=0)
+    window_start = models.DateTimeField()

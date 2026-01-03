@@ -11,5 +11,7 @@ urlpatterns = [
     path('blogs/', blogs_page, name='blogs'),
     path('content/', content, name='content'),
     path("diseases/<slug:slug>/", disease_page, name="disease_detail"),
-    path('blogs/<slug:slug>/', blog_detail, name='blog_detail')
+    path('blogs/<slug:slug>/', blog_detail, name='blog_detail'),
+    path("book/", book_appointment, name="book"),
+    path("confirm/<int:appointment_id>/", confirm_appointment, name="confirm"),
 ]

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>✅ Appointment Booked Successfully</h1>
+<p>Thank you. Your appointment has been booked.</p>
+
+<script>
+    // 🔥 CLEAR ONLY AFTER SUCCESS
+    localStorage.removeItem("appointment_key");
+</script>
+
+{% endblock %}

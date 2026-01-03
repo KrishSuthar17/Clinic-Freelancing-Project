@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import testimonials_reviews,faq,gallery,blog,contact_gallary
+from .models import testimonials_reviews,faq,gallery,blog,contact_gallary,Appointment,Notification
 # Register your models here.
 
 admin.site.register(testimonials_reviews)
@@ -28,6 +28,25 @@ class contact_gallaryAdmin(admin.ModelAdmin):
     list_display = ('image',)
     search_fields = ('image',)
 
+@admin.register(Appointment)
+class AppointmentAdmin(admin.ModelAdmin):
+    list_display = ('patient_name', 'doctor', 'date', 'time_slot', 'status')
+    list_filter = ('doctor', 'status', 'date')
+    search_fields = ('patient_name', 'phone')
+    
+    readonly_fields = ("patient_name", "phone")
+
+    def has_change_permission(self, request, obj=None):
+        if obj and obj.is_anonymized:
+            return False
+        return super().has_change_permission(request, obj)
+
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ("recipient_type", "title", "is_read", "created_at")
+    list_filter = ("recipient_type", "is_read")
+    search_fields = ("title", "message")
 
 
 # admin.py (all apps)

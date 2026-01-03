@@ -1,10 +1,24 @@
 from django.shortcuts import render
 
-from clinic_app.models import ClinicInfo, Disease, Doctor, HomeopathyAbout, LiveSession
+from clinic_app.models import ClinicInfo, Disease, Doctor, HomeopathyAbout, LiveSession, Appointment, Device
 from .forms import testimonials_reviews_forms
 from django.contrib import messages
 from django.shortcuts import redirect,get_object_or_404
 from .models import Homeopathy_end_about_content, Homeopathy_start_about_content, faq, testimonials_reviews, gallery, blog, contact_gallary
+from .utils.time_slots import TIME_SLOTS
+from django.db import IntegrityError
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from .utils.notifications import notify_doctor_new_booking,notify_patient_confirmation
+from django.utils.timezone import now
+from django.db import IntegrityError, transaction
+from .models import Device, Notification
+from .tasks import send_push_notification
+from .constants import MAX_APPOINTMENTS_PER_DAY
+from .utils.notifications import notify_doctor_new_booking
+from .utils.audit import log_action,get_client_ip
+from .utils.rate_limit import is_rate_limited
+
 
 # Create your views here.
 
@@ -100,3 +114,175 @@ def disease_page(request, slug=None):
 def blog_detail(request, slug):
     blog_obj = get_object_or_404(blog, slug=slug)
     return render(request, 'components/Blog_details.html', {'blog': blog_obj})
+
+from django.shortcuts import render
+from django.utils.timezone import now
+from django.utils.dateparse import parse_date, parse_time
+from django.db import IntegrityError, transaction
+
+from clinic_app.models import Appointment, Doctor
+from clinic_app.constants import MAX_APPOINTMENTS_PER_DAY
+from clinic_app.utils.notifications import notify_doctor_new_booking
+from clinic_app.utils.rate_limit import is_rate_limited
+from clinic_app.utils.audit import log_action, get_client_ip
+from clinic_app.utils.time_slots import TIME_SLOTS
+
+
+def book_appointment(request):
+
+    # =========================
+    # GET → SHOW FORM
+    # =========================
+    if request.method == "GET":
+        doctors = Doctor.objects.filter(is_active=True)
+        return render(request, "Appoinment.html", {
+            "doctors": doctors,
+            "slots": TIME_SLOTS
+        })
+
+    # =========================
+    # POST → PROCESS BOOKING
+    # =========================
+
+    phone = request.POST.get("phone")
+    key = request.POST.get("idempotency_key")
+    ip = get_client_ip(request)
+
+    # ---- Parse & validate date/time FIRST ----
+    date_str = request.POST.get("date")
+    time_str = request.POST.get("time")
+
+    if not isinstance(date_str, str) or not isinstance(time_str, str):
+        return render(request, "error.html", {
+        "error": "Invalid date or time selected."
+    })
+
+
+    date_obj = parse_date(date_str)
+    time_obj = parse_time(time_str)
+
+    if not date_obj or not time_obj:
+        return render(request, "error.html", {
+            "error": "Invalid date or time format."
+        })
+
+    if time_obj not in TIME_SLOTS:
+        return render(request, "error.html", {
+            "error": "Invalid time slot selected."
+        })
+
+    # ---- 1️⃣ IDEMPOTENCY (first, always) ----
+    existing = Appointment.objects.filter(idempotency_key=key).first()
+    if existing:
+        return render(request, "success.html", {
+            "message": "Appointment already booked.",
+            "appointment": existing
+        })
+
+    # ---- 2️⃣ RATE LIMIT (only after valid input) ----
+    if is_rate_limited(phone, ip):
+        log_action(request, "RATE_LIMIT_BLOCK", phone=phone)
+        return render(request, "error.html", {
+            "error": "Too many requests. Try again later."
+        })
+
+    log_action(request, "BOOK_ATTEMPT", phone=phone)
+
+    # ---- 3️⃣ DAILY LIMIT + CREATE (ATOMIC) ----
+    try:
+        with transaction.atomic():
+            today_count = Appointment.objects.select_for_update().filter(
+                phone=phone,
+                date=date_obj
+            ).count()
+
+            if today_count >= MAX_APPOINTMENTS_PER_DAY:
+                return render(request, "error.html", {
+                    "error": "Daily appointment limit reached (max 4 per day)."
+                })
+
+            appointment = Appointment.objects.create(
+                patient_name=request.POST.get("name"),
+                phone=phone,
+                doctor_id=request.POST.get("doctor"),
+                date=date_obj,        # ✅ date object
+                time_slot=time_obj,   # ✅ time object
+                idempotency_key=key,
+            )
+
+    except IntegrityError:
+        return render(request, "error.html", {
+            "error": "This time slot is already booked."
+        })
+
+    # ---- 4️⃣ NOTIFY DOCTOR (AFTER COMMIT) ----
+    notify_doctor_new_booking(appointment)
+
+    return render(request, "success.html", {
+        "appointment": appointment
+    })
+
+
+
+
+
+@csrf_exempt
+def register_device(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid method"}, status=405)
+
+    Device.objects.update_or_create(
+        fcm_token=request.POST["token"],
+        defaults={
+            "user_type": request.POST["user_type"],
+            "user_id": request.POST["user_id"],
+            "is_active": True,
+        }
+    )
+
+    return JsonResponse({"status": "registered"})
+
+
+
+
+# appointment already saved safely here
+
+# 1️⃣ Save admin notification
+def confirm_appointment(appointment):
+    appointment.status = "confirmed"
+    appointment.save()
+
+    Notification.objects.create(
+        recipient_type="patient",
+        recipient_id=appointment.id,
+        title="Appointment Confirmed",
+        message="Your appointment has been confirmed."
+    )
+
+    devices = Device.objects.filter(
+        user_type="patient",
+        user_id=appointment.id,
+        is_active=True
+    )
+
+    for d in devices:
+        send_push_notification.delay(
+            d.fcm_token,
+            "Appointment Confirmed",
+            "Your appointment is confirmed."
+        )
+
+
+
+from django.shortcuts import get_object_or_404
+
+def confirm_appointment(request, appointment_id):
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+
+    appointment.status = "confirmed"
+    appointment.save()
+
+    # 🔥 STEP 6 IS HERE
+    notify_patient_confirmation(appointment)
+
+    return redirect("/admin/")

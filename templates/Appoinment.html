@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+  <div class="bg-white max-w-lg  shadow-xl rounded-2xl p-8">
+
+    <!-- Header -->
+    <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">
+      Book Appointment
+    </h1>
+
+    <!-- Form -->
+    <form method="post" class="space-y-5">
+      {% csrf_token %}
+
+      <!-- Name -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Your Name
+        </label>  
+        <input
+          name="name"
+          required
+          placeholder="Enter your full name"
+          class="w-full rounded-lg border border-gray-300 px-4 py-2
+                 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+        >
+      </div>
+
+      <!-- Phone -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Phone Number
+        </label>
+        <input
+          maxlength="10"
+          name="phone"
+          required
+          placeholder="10-digit mobile number"
+          class="w-full rounded-lg border border-gray-300 px-4 py-2
+                 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+        >
+      </div>
+
+      <!-- Doctor -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Select Doctor
+        </label>
+        <select
+          name="doctor"
+          required
+          class="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white
+                 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+        >
+          <option value="" disabled selected>Choose a doctor</option>
+          {% for doc in doctors %}
+            <option value="{{ doc.id }}">{{ doc.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Date -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Appointment Date
+        </label>
+        <input
+          type="date"
+          name="date"
+          required
+          class="w-full rounded-lg border border-gray-300 px-4 py-2
+                 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+        >
+      </div>
+
+      <!-- Time Slot -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Time Slot
+        </label>
+        <select
+          name="time"
+          required
+          class="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white
+                 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+        >
+          <option value="" disabled selected>Select a time slot</option>
+           {% for slot in slots %}
+            <option value="{{ slot|time:'H:i' }}">
+              {{ slot|time:'H:i' }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Hidden idempotency key -->
+      <input type="hidden" name="idempotency_key" id="idempotency_key">
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        class="w-full bg-primary text-black border-2 font-semibold py-3 rounded-lg
+               hover:bg-primary/90 transition duration-200
+               focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+      >
+        Book Appointment
+      </button>
+    </form>
+
+    <!-- Footer note -->
+    <p class="text-xs text-gray-500 text-center mt-6">
+      Your information is securely submitted and will not be shared.
+    </p>
+  </div>
+</div>
+
+<script>
+  // Generate ONCE
+  if (!localStorage.getItem("appointment_key")) {
+    localStorage.setItem("appointment_key", crypto.randomUUID());
+  }
+
+  document.getElementById("idempotency_key").value =
+    localStorage.getItem("appointment_key");
+</script>
+{% endblock %}
