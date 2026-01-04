@@ -1,12 +1,73 @@
 {% extends "base.html" %}
-
 {% block content %}
-<h1>✅ Appointment Booked Successfully</h1>
-<p>Thank you. Your appointment has been booked.</p>
 
-<script>
-    // 🔥 CLEAR ONLY AFTER SUCCESS
-    localStorage.removeItem("appointment_key");
+<div class="max-w-md mx-auto mt-12 bg-white p-6 rounded-xl shadow">
+  <h2 class="text-xl font-bold text-green-600 text-center">
+    ✅ Appointment Booked
+  </h2>
+
+  <p class="text-center text-gray-600 mt-2">
+    Enable notifications to get updates.
+  </p>
+
+  <button id="enableNotificationsBtn"
+          class="mt-6 w-full bg-blue-600 text-black py-3 rounded-lg font-semibold">
+    🔔 Enable Notifications
+  </button>
+
+  <a href="/my-notifications/?phone={{ appointment.phone }}"
+   class="block mt-6 text-center text-blue-600 underline">
+   View My Notifications
+</a>
+
+</div>
+
+<script type="module">
+  console.log("🔥 Firebase script loaded");
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCEHTsXR53kbgYEQ2TrlhqMN_2F0Gzs4TM",
+    authDomain: "clinic-notifications.firebaseapp.com",
+    projectId: "clinic-notifications",
+    messagingSenderId: "966949240460",
+    appId: "1:966949240460:web:892b509260d0d660fc05a9",
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const messaging = getMessaging(app);
+
+  document.getElementById("enableNotificationsBtn").onclick = async () => {
+    console.log("🔔 Button clicked");
+
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") {
+      alert("Permission denied");
+      return;
+    }
+
+    const token = await getToken(messaging, {
+      vapidKey: "BJSaZGxtvJCDGFyGvqbZDoTCujGjOOqOYG7Pdjhu1svf_AWwk1642KGfOXq83zTr9i-wg7tTsx-3TxrSIfdGe_4"
+    });
+
+    console.log("📲 TOKEN:", token);
+
+    await fetch("/register-device/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+            token: token,
+            user_type: "patient",
+            phone: "{{ appointment.phone }}"
+        }),
+        });
+
+    alert("✅ Notifications enabled");
+  };
 </script>
 
 {% endblock %}

@@ -14,4 +14,7 @@ urlpatterns = [
     path('blogs/<slug:slug>/', blog_detail, name='blog_detail'),
     path("book/", book_appointment, name="book"),
     path("confirm/<int:appointment_id>/", confirm_appointment, name="confirm"),
+    path("doctor/", doctor_page, name='doctor'),
+    path("register-device/", register_device, name="register_device"),
+    path("my-notifications/", patient_notifications, name="patient_notifications"),
 ]

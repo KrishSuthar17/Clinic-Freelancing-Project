@@ -141,9 +141,9 @@ class Homeopathy_end_about_content(models.Model):
 
 class Appointment(models.Model):
     STATUS_CHOICES = [
-        ('pending','Pending'),
-        ('confirmed','Confirmed'),
-        ('cancelled', 'Cancelled')
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('cancelled', 'Cancelled'),
     ]
     patient_name = models.CharField(max_length=100)
     phone = models.CharField(
@@ -177,14 +177,15 @@ class Device(models.Model):
         ('patient','Patient')
     ]
 
-    user_type = models.CharField( max_length=10,choices=USER_TYPE)
-    user_id = models.IntegerField()
+    user_type = models.CharField(max_length=10, choices=USER_TYPE)
+    # user_id = models.IntegerField(null=True, blank=True)  # doctor user id
+    phone = models.CharField(max_length=15, null=True, blank=True)  # 🔥 ADD THIS
     fcm_token = models.TextField(unique=True)
     is_active = models.BooleanField(default=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.user_type}-{self.user_id}"
+        return f"{self.user_type}"
     
 
 class Notification(models.Model):
@@ -194,7 +195,7 @@ class Notification(models.Model):
     ]
 
     recipient_type = models.CharField(max_length=10, choices=RECIPIENT)
-    recipient_id = models.IntegerField()
+    recipient_id = models.CharField(max_length=20)
     title = models.CharField(max_length=200)
     message = models.TextField()
     is_read = models.BooleanField(default=False)

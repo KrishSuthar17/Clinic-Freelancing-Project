@@ -98,16 +98,18 @@
       <!-- Hidden idempotency key -->
       <input type="hidden" name="idempotency_key" id="idempotency_key">
 
+      
+      
       <!-- Submit -->
       <button
-        type="submit"
-        class="w-full bg-primary text-black border-2 font-semibold py-3 rounded-lg
-               hover:bg-primary/90 transition duration-200
-               focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+      type="submit"
+      class="w-full bg-primary text-black border-2 font-semibold py-3 rounded-lg
+      hover:bg-primary/90 transition duration-200
+      focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
       >
-        Book Appointment
-      </button>
-    </form>
+      Book Appointment
+    </button>
+  </form>
 
     <!-- Footer note -->
     <p class="text-xs text-gray-500 text-center mt-6">
@@ -116,6 +118,8 @@
   </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script>
   // Generate ONCE
   if (!localStorage.getItem("appointment_key")) {
@@ -124,5 +128,53 @@
 
   document.getElementById("idempotency_key").value =
     localStorage.getItem("appointment_key");
+
+
+firebase.initializeApp({
+  apiKey: "AIzaSyCEHTsXR53kbgYEQ2TrlhqMN_2F0Gzs4TM",
+  authDomain: "clinic-notifications.firebaseapp.com",
+  projectId: "clinic-notifications",
+  messagingSenderId: "966949240460",
+  appId: "1:966949240460:web:892b509260d0d660fc05a9",
+});
+
+const messaging = firebase.messaging();
+
+document
+  .getElementById("enablePatientNotifications")
+  .addEventListener("click", async () => {
+
+    const phone = document.querySelector("input[name='phone']").value;
+
+    if (!phone || phone.length !== 10) {
+      alert("Enter phone number first");
+      return;
+    }
+
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") {
+      alert("Notification permission denied");
+      return;
+    }
+
+    const token = await messaging.getToken({
+      vapidKey: "BJSaZGxtvJCDGFyGvqbZDoTCujGjOOqOYG7Pdjhu1svf_AWwk1642KGfOXq83zTr9i-wg7tTsx-3TxrSIfdGe_4"
+    });
+
+    await fetch("/register-device/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        token: token,
+        user_type: "patient",
+        phone: phone
+      }),
+    });
+
+    alert("✅ You will receive appointment updates");
+    console.log("Patient FCM token:", token);
+  });
 </script>
 {% endblock %}

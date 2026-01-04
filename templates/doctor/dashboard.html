@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Doctor Dashboard</h1>
+
+<button id="enableNotificationsBtn"
+        style="padding:10px;background:#16a34a;color:white;border-radius:6px;">
+  🔔 Enable Real Notifications
+</button>
+
+
+
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+
+<script>
+  console.log("🔥 Dashboard script loaded");
+
+  firebase.initializeApp({
+    apiKey: "AIzaSyCEHTsXR53kbgYEQ2TrlhqMN_2F0Gzs4TM",
+    authDomain: "clinic-notifications.firebaseapp.com",
+    projectId: "clinic-notifications",
+    messagingSenderId: "966949240460",
+    appId: "1:966949240460:web:892b509260d0d660fc05a9",
+  });
+
+  const messaging = firebase.messaging();
+
+  document
+    .getElementById("enableNotificationsBtn")
+    .addEventListener("click", async () => {
+      const permission = await Notification.requestPermission();
+      if (permission !== "granted") {
+        alert("Permission denied");
+        return;
+      }
+
+      const token = await messaging.getToken({
+        vapidKey: "BJSaZGxtvJCDGFyGvqbZDoTCujGjOOqOYG7Pdjhu1svf_AWwk1642KGfOXq83zTr9i-wg7tTsx-3TxrSIfdGe_4",
+      });
+
+      console.log("FCM token:", token);
+
+      await fetch("/register-device/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+            token: token,
+            user_type: "doctor"
+        }),
+        });
+
+
+      alert("✅ Notifications enabled");
+    });
+</script>
+
+
+{% endblock %}
+

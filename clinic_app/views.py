@@ -18,9 +18,13 @@ from .constants import MAX_APPOINTMENTS_PER_DAY
 from .utils.notifications import notify_doctor_new_booking
 from .utils.audit import log_action,get_client_ip
 from .utils.rate_limit import is_rate_limited
-
-
+import traceback
+from django.contrib.auth.decorators import login_required
 # Create your views here.
+
+@login_required
+def doctor_page(reqest):
+    return render(reqest, 'doctor/dashboard.html')
 
 def home_page(request):
     context = {
@@ -225,22 +229,61 @@ def book_appointment(request):
 
 
 
-
 @csrf_exempt
 def register_device(request):
     if request.method != "POST":
         return JsonResponse({"error": "Invalid method"}, status=405)
 
-    Device.objects.update_or_create(
-        fcm_token=request.POST["token"],
-        defaults={
-            "user_type": request.POST["user_type"],
-            "user_id": request.POST["user_id"],
-            "is_active": True,
-        }
-    )
+    token = request.POST.get("token")
+    user_type = request.POST.get("user_type")
+    phone = request.POST.get("phone")
 
-    return JsonResponse({"status": "registered"})
+    if not token or not user_type:
+        return JsonResponse({"error": "Missing token or user_type"}, status=400)
+
+    # ==========================
+    # PATIENT (PHONE-BASED)
+    # ==========================
+    if user_type == "patient":
+        if not phone:
+            return JsonResponse({"error": "Phone is required for patient"}, status=400)
+
+        # ✅ DO NOT use user_id for phone
+        device, created = Device.objects.update_or_create(
+            fcm_token=token,
+            defaults={
+                "user_type": "patient",
+                "phone": phone,
+                "is_active": True,
+            }
+        )
+
+    # ==========================
+    # DOCTOR (AUTHENTICATED USER)
+    # ==========================
+    elif user_type == "doctor":
+        if not request.user.is_authenticated:
+            return JsonResponse({"error": "Unauthorized"}, status=401)
+
+        device, created = Device.objects.update_or_create(
+            fcm_token=token,
+            defaults={
+                "user_type": "doctor",
+                "user_id": request.user.id,  # ONLY doctors use user_id
+                "phone": None,
+                "is_active": True,
+            }
+        )
+
+    else:
+        return JsonResponse({"error": "Invalid user_type"}, status=400)
+
+    print("✅ DEVICE REGISTERED:", user_type, phone or request.user.id)
+
+    return JsonResponse({
+        "status": "registered",
+        "created": created
+    })
 
 
 
@@ -261,7 +304,6 @@ def confirm_appointment(appointment):
 
     devices = Device.objects.filter(
         user_type="patient",
-        user_id=appointment.id,
         is_active=True
     )
 
@@ -271,6 +313,7 @@ def confirm_appointment(appointment):
             "Appointment Confirmed",
             "Your appointment is confirmed."
         )
+
 
 
 
@@ -286,3 +329,23 @@ def confirm_appointment(request, appointment_id):
     notify_patient_confirmation(appointment)
 
     return redirect("/admin/")
+
+
+
+def patient_notifications(request):
+    phone = request.GET.get("phone")
+
+    if not phone:
+        return render(request, "error.html", {
+            "error": "Phone number is required to view notifications."
+        })
+
+    notifications = Notification.objects.filter(
+        recipient_type="patient",
+        recipient_id=phone
+    ).order_by("-created_at")[:4]
+
+    return render(request, "patient_notifications.html", {
+        "phone": phone,
+        "notifications": notifications
+    })

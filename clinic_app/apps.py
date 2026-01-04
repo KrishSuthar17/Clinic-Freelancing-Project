@@ -1,5 +1,8 @@
 from django.apps import AppConfig
 
-
 class ClinicAppConfig(AppConfig):
-    name = 'clinic_app'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "clinic_app"
+
+    def ready(self):
+        import clinic_app.signals

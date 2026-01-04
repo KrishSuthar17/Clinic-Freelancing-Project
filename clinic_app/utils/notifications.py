@@ -2,48 +2,46 @@
 from clinic_app.models import Device, Notification
 from clinic_app.tasks import send_push_notification
 
-def notify_doctor_new_booking(appointment):
-    # 1. Save notification for admin
-    Notification.objects.create(
-        recipient_type="doctor",
-        recipient_id=appointment.doctor.id,
-        title="New Appointment",
-        message=f"{appointment.patient_name} booked {appointment.date} at {appointment.time_slot}"
-    )
+from clinic_app.models import Device
+from clinic_app.firebase import send_fcm_push
 
-    # 2. Send push to doctor devices
+def notify_doctor_new_booking(appointment):
     devices = Device.objects.filter(
         user_type="doctor",
-        user_id=appointment.doctor.id,
         is_active=True
     )
 
-    for device in devices:
-        send_push_notification.delay(
-            device.fcm_token,
+    for d in devices:
+        send_fcm_push(
+            d.fcm_token,
             "New Appointment",
-            "You have a new appointment request."
+            f"New appointment from {appointment.patient_name}"
         )
 
 
 
 def notify_patient_confirmation(appointment):
+    title = "✅ Appointment Confirmed"
+    message = "Your appointment has been confirmed by the doctor."
+
     Notification.objects.create(
         recipient_type="patient",
-        recipient_id=appointment.id,
-        title="Appointment Confirmed",
-        message="Your appointment has been confirmed."
+        recipient_id=appointment.phone,  # phone-based identity
+        title=title,
+        message=message
     )
 
     devices = Device.objects.filter(
         user_type="patient",
-        user_id=appointment.id,
+        phone=appointment.phone,
         is_active=True
     )
 
+    print("📲 DEVICES FOUND:", devices.count())
+
     for device in devices:
-        send_push_notification.delay(
-            device.fcm_token,
-            "Appointment Confirmed",
-            "Your appointment is confirmed."
-        )
+        send_fcm_push(device.fcm_token, title, message)
+
+
+
+

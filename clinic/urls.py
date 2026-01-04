@@ -14,12 +14,22 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.views.generic import TemplateView
 from django.contrib import admin
 from django.urls import path,include
+from django.http import FileResponse
 from django.conf import settings
+import os
 from django.conf.urls.static import static
 
+def firebase_sw(request):
+    return FileResponse(
+        open(os.path.join(settings.BASE_DIR, "firebase-messaging-sw.js"), "rb"),
+        content_type="application/javascript",
+    )
+
 urlpatterns = [
+    path("firebase-messaging-sw.js", firebase_sw),
     path('admin/', admin.site.urls),
     path('',include('clinic_app.urls')),
 

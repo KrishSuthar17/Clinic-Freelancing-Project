@@ -1,5 +1,18 @@
 import firebase_admin
-from firebase_admin import credentials
+from firebase_admin import credentials, messaging
+from django.conf import settings
 
-cred = credentials.Certificate("firebase-service-account.json")
-firebase_admin.initialize_app(cred)
+if not firebase_admin._apps:
+    cred = credentials.Certificate(settings.FIREBASE_SERVICE_ACCOUNT)
+    firebase_admin.initialize_app(cred)
+
+
+def send_fcm_push(token, title, message):
+    message = messaging.Message(
+        notification=messaging.Notification(
+            title=title,
+            body=message,
+        ),
+        token=token,
+    )
+    messaging.send(message)

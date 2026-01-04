@@ -13,13 +13,68 @@
 
   {% include "components/navbar.html" %}
 
-  {% block content %}{% endblock %}
+  {% block content %}
+  <link rel="manifest" href="{% static 'manifest.json' %}">
+  <meta name="theme-color" content="#2563eb">
+
+
+
+  {% endblock %}
 
   {% include "components/footer.html" %}
 
   <script src="{% static 'js/ui.js' %}"></script>
 
   <script>
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/firebase-messaging-sw.js")
+        .then(reg => {
+          console.log("🔥 Firebase SW registered", reg.scope);
+        })
+        .catch(err => {
+          console.error("❌ SW registration failed", err);
+        });
+    }
+
+
+    async function requestNotificationPermission() {
+      const permission = await Notification.requestPermission();
+      if (permission === "granted") {
+        console.log("Notification permission granted");
+      } else {
+        console.log("Notification permission denied");
+      }
+    }
+
+
+    async function registerFakeDevice() {
+      const fakeToken = crypto.randomUUID();
+
+      try {
+        const res = await fetch("/register-device/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({
+            token: fakeToken,
+            user_type: "doctor",
+            user_id: "{{ request.user.id|default:1 }}"
+          }),
+        });
+
+        if (res.ok) {
+          console.log("✅ Device registered:", fakeToken);
+          alert("Device registered for notifications");
+        } else {
+          console.error("❌ Device registration failed");
+        }
+      } catch (err) {
+        console.error("❌ Error registering device", err);
+      }
+    }
+
     const hamburger = document.getElementById("hamburger");
     const navLinks = document.getElementById("navLinks");
 
@@ -28,4 +83,5 @@
     });
   </script>
 </body>
+
 </html>

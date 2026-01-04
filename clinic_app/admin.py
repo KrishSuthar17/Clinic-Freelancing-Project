@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import testimonials_reviews,faq,gallery,blog,contact_gallary,Appointment,Notification
+from clinic_app.utils.notifications import notify_patient_confirmation
 # Register your models here.
 
 admin.site.register(testimonials_reviews)
@@ -33,6 +34,19 @@ class AppointmentAdmin(admin.ModelAdmin):
     list_display = ('patient_name', 'doctor', 'date', 'time_slot', 'status')
     list_filter = ('doctor', 'status', 'date')
     search_fields = ('patient_name', 'phone')
+
+    def save_model(self, request, obj, form, change):
+        old_status = None
+
+        if obj.pk:
+            old_status = Appointment.objects.get(pk=obj.pk).status
+
+        super().save_model(request, obj, form, change)
+
+        # 🔥 SEND NOTIFICATION ONLY ON STATUS CHANGE → confirmed
+        if old_status != "confirmed" and obj.status == "confirmed":
+            print("🔥 ADMIN CONFIRM → SENDING PATIENT NOTIFICATION")
+            notify_patient_confirmation(obj)
     
     readonly_fields = ("patient_name", "phone")
 
