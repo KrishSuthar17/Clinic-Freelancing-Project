@@ -14,3 +14,5 @@ data_utf8.json
 firebase/serviceAccountKey.json
 firebase-messaging-sw.js
 serviceAccountKey.json
+
+static/images/manifest.json
