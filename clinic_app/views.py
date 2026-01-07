@@ -18,7 +18,8 @@ from .constants import MAX_APPOINTMENTS_PER_DAY
 from .utils.notifications import notify_doctor_new_booking
 from .utils.audit import log_action,get_client_ip
 from .utils.rate_limit import is_rate_limited
-import traceback
+import re
+
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
@@ -297,7 +298,7 @@ def confirm_appointment(appointment):
 
     Notification.objects.create(
         recipient_type="patient",
-        recipient_id=appointment.id,
+        recipient_id=int(appointment.phone), 
         title="Appointment Confirmed",
         message="Your appointment has been confirmed."
     )
@@ -331,21 +332,33 @@ def confirm_appointment(request, appointment_id):
     return redirect("/admin/")
 
 
-
 def patient_notifications(request):
-    phone = request.GET.get("phone")
+    notifications = []
+    phone = None
+    error = None
 
-    if not phone:
-        return render(request, "error.html", {
-            "error": "Phone number is required to view notifications."
-        })
+    if request.method == "POST":
+        phone = request.POST.get("phone")
 
-    notifications = Notification.objects.filter(
-        recipient_type="patient",
-        recipient_id=phone
-    ).order_by("-created_at")[:4]
+        if not phone:
+            error = "Phone number is required."
+        elif not re.match(r"^[6-9]\d{9}$", phone):
+            error = "Enter a valid 10-digit mobile number."
+        else:
+            notifications = (
+                Notification.objects
+                .filter(
+                    recipient_type="patient",
+                    recipient_id=int(phone)
+                )
+                .order_by("-created_at")[:4]
+            )
+
+            if not notifications:
+                error = "No notifications found for this number."
 
     return render(request, "patient_notifications.html", {
+        "notifications": notifications,
         "phone": phone,
-        "notifications": notifications
+        "error": error
     })

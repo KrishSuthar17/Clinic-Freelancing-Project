@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="max-w-md mx-auto mt-12 bg-white p-6 rounded-xl shadow">
-  <h2 class="text-xl font-bold text-green-600 text-center">
+<div class="max-w-md h-[80vh] mx-auto mt-12 bg-white p-6 ">
+  
+    <div class="max-w-md  mx-auto mt-12 bg-amber-50 scale-150 p-6 rounded-xl shadow">
+        <h2 class="text-xl font-bold text-green-600 text-center">
     ✅ Appointment Booked
   </h2>
 
-  <p class="text-center text-gray-600 mt-2">
+  {% if is_authenticated %}
+   <p class="text-center text-gray-600 mt-2">
     Enable notifications to get updates.
   </p>
 
@@ -14,16 +17,20 @@
           class="mt-6 w-full bg-blue-600 text-black py-3 rounded-lg font-semibold">
     🔔 Enable Notifications
   </button>
+  {% else %}
+  <p>You Can Check Your Appointment Click Below</p>
+  {% endif %}
 
   <a href="/my-notifications/?phone={{ appointment.phone }}"
-   class="block mt-6 text-center text-blue-600 underline">
+   class="block mt-6 m-auto text-center text-white bg-red-400 rounded-2xl w-1/2 underline">
    View My Notifications
 </a>
+    </div>
 
 </div>
 
 <script type="module">
-  console.log("🔥 Firebase script loaded");
+
 
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
@@ -40,7 +47,7 @@
   const messaging = getMessaging(app);
 
   document.getElementById("enableNotificationsBtn").onclick = async () => {
-    console.log("🔔 Button clicked");
+   
 
     const permission = await Notification.requestPermission();
     if (permission !== "granted") {
@@ -52,7 +59,6 @@
       vapidKey: "BJSaZGxtvJCDGFyGvqbZDoTCujGjOOqOYG7Pdjhu1svf_AWwk1642KGfOXq83zTr9i-wg7tTsx-3TxrSIfdGe_4"
     });
 
-    console.log("📲 TOKEN:", token);
 
     await fetch("/register-device/", {
         method: "POST",
