@@ -9,3 +9,8 @@ db.sqlite3
 db_backup.sqlite3
 data.json
 data_utf8.json
+*.json
+
+firebase/serviceAccountKey.json
+firebase-messaging-sw.js
+serviceAccountKey.json
