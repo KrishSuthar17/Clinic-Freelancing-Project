@@ -1,5 +1,6 @@
 import uuid
 from django.shortcuts import render
+from httpcore import request
 
 from clinic_app.models import ClinicInfo, Disease, Doctor, HomeopathyAbout, LiveSession, Appointment, Device
 from .forms import testimonials_reviews_forms
@@ -224,6 +225,8 @@ def book_appointment(request):
 
 @csrf_exempt
 def register_device(request):
+    print("🔥 REGISTER DEVICE HIT")
+    print("POST DATA:", request.POST)
     if request.method != "POST":
         return JsonResponse({"error": "Invalid method"}, status=405)
 
