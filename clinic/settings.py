@@ -69,6 +69,11 @@ CSP_FRAME_SRC = (
 )
 
 
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+
 STATIC_ROOT = BASE_DIR / "staticfiles"  # for production
 
 MEDIA_URL = "/media/"

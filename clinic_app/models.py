@@ -196,6 +196,7 @@ class Notification(models.Model):
 
     recipient_type = models.CharField(max_length=10, choices=RECIPIENT)
     recipient_id = models.CharField(max_length=20)
+    phone = models.CharField(max_length=15, null=False,blank=False, default="")
     title = models.CharField(max_length=200)
     message = models.TextField()
     is_read = models.BooleanField(default=False)

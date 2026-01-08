@@ -15,6 +15,8 @@
         <button type="submit" class="w-full bg-blue-600 text-black py-2 rounded font-semibold">
             View Notifications
         </button>
+        <br>
+        <button id="enablePatientNotifications">Enable</button>
     </form>
 
     {% if error %}
@@ -38,5 +40,27 @@
     {% endif %}
 
 </div>
+
+<script>
+    messaging.onMessage(function (payload) {
+        console.log("📩 patient payload:", payload);
+
+        new Notification(
+            payload.notification.title,
+            { body: payload.notification.body }
+        );
+    });
+
+    firebase.initializeApp({ ...});
+
+    const messaging = firebase.messaging();
+
+    const token = await messaging.getToken({ vapidKey: '...' });
+
+    fetch('/register-device/', {
+        body: { phone: 'YOUR_REAL_PHONE', user_type: 'patient', fcm_token: token }
+    });
+
+</script>
 
 {% endblock %}

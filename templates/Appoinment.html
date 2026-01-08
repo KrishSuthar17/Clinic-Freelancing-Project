@@ -98,8 +98,6 @@
       <!-- Hidden idempotency key -->
       <input type="hidden" name="idempotency_key" id="idempotency_key">
 
-      
-      
       <!-- Submit -->
       <button
       type="submit"
@@ -118,16 +116,22 @@
   </div>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script>
-  // Generate ONCE
-  if (!localStorage.getItem("appointment_key")) {
-    localStorage.setItem("appointment_key", crypto.randomUUID());
-  }
 
-  document.getElementById("idempotency_key").value =
-    localStorage.getItem("appointment_key");
+<script>
+  // testing
+const messaging = firebase.messaging();
+
+messaging.onMessage(function(payload){
+    console.log("📩 PATIENT RECEIVE:", payload);
+});
+
+  // Generate ONCE
+ if (!localStorage.getItem("appointment_key")) {
+  localStorage.setItem("appointment_key", crypto.randomUUID());
+}
+
+document.getElementById("idempotency_key").value =
+  localStorage.getItem("appointment_key");
 
 
 firebase.initializeApp({

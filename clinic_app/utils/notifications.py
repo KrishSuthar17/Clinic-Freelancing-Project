@@ -31,16 +31,21 @@ def notify_patient_confirmation(appointment):
         message=message
     )
 
-    devices = Device.objects.filter(
+    patient_device = Device.objects.filter(
         user_type="patient",
-        phone=appointment.phone,
+        phone = appointment.phone,
         is_active=True
     )
 
-    print("📲 DEVICES FOUND:", devices.count())
+    print("📲 DEVICES FOUND:", patient_device.count())
 
-    for device in devices:
+    for device in patient_device:
         send_fcm_push(device.fcm_token, title, message)
+        send_push_notification.delay(
+            device.fcm_token,
+            "Appointment Confirmed",
+            "Your appointment is confirmed."
+        )
 
 
 

@@ -1,3 +1,4 @@
+import uuid
 from django.shortcuts import render
 
 from clinic_app.models import ClinicInfo, Disease, Doctor, HomeopathyAbout, LiveSession, Appointment, Device
@@ -6,7 +7,6 @@ from django.contrib import messages
 from django.shortcuts import redirect,get_object_or_404
 from .models import Homeopathy_end_about_content, Homeopathy_start_about_content, faq, testimonials_reviews, gallery, blog, contact_gallary
 from .utils.time_slots import TIME_SLOTS
-from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .utils.notifications import notify_doctor_new_booking,notify_patient_confirmation
@@ -17,9 +17,10 @@ from .tasks import send_push_notification
 from .constants import MAX_APPOINTMENTS_PER_DAY
 from .utils.notifications import notify_doctor_new_booking
 from .utils.audit import log_action,get_client_ip
+from uuid import UUID
 from .utils.rate_limit import is_rate_limited
 import re
-
+from django.utils.dateparse import parse_date, parse_time
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
@@ -120,17 +121,6 @@ def blog_detail(request, slug):
     blog_obj = get_object_or_404(blog, slug=slug)
     return render(request, 'components/Blog_details.html', {'blog': blog_obj})
 
-from django.shortcuts import render
-from django.utils.timezone import now
-from django.utils.dateparse import parse_date, parse_time
-from django.db import IntegrityError, transaction
-
-from clinic_app.models import Appointment, Doctor
-from clinic_app.constants import MAX_APPOINTMENTS_PER_DAY
-from clinic_app.utils.notifications import notify_doctor_new_booking
-from clinic_app.utils.rate_limit import is_rate_limited
-from clinic_app.utils.audit import log_action, get_client_ip
-from clinic_app.utils.time_slots import TIME_SLOTS
 
 
 def book_appointment(request):
@@ -177,13 +167,15 @@ def book_appointment(request):
         })
 
     # ---- 1️⃣ IDEMPOTENCY (first, always) ----
-    existing = Appointment.objects.filter(idempotency_key=key).first()
-    if existing:
-        return render(request, "success.html", {
-            "message": "Appointment already booked.",
-            "appointment": existing
-        })
+    raw_key = request.POST.get("idempotency_key")
 
+    if not raw_key:                         # blank allowed
+        key = uuid.uuid4()
+    else:
+        try:
+            key = UUID(raw_key)
+        except Exception:
+            key = uuid.uuid4()  
     # ---- 2️⃣ RATE LIMIT (only after valid input) ----
     if is_rate_limited(phone, ip):
         log_action(request, "RATE_LIMIT_BLOCK", phone=phone)
@@ -210,8 +202,8 @@ def book_appointment(request):
                 patient_name=request.POST.get("name"),
                 phone=phone,
                 doctor_id=request.POST.get("doctor"),
-                date=date_obj,        # ✅ date object
-                time_slot=time_obj,   # ✅ time object
+                date=date_obj,       
+                time_slot=time_obj,  
                 idempotency_key=key,
             )
 
@@ -303,12 +295,14 @@ def confirm_appointment(appointment):
         message="Your appointment has been confirmed."
     )
 
-    devices = Device.objects.filter(
+    patient_device = Device.objects.filter(
         user_type="patient",
+        phone = appointment.phone,
         is_active=True
     )
 
-    for d in devices:
+
+    for d in patient_device:
         send_push_notification.delay(
             d.fcm_token,
             "Appointment Confirmed",
@@ -316,20 +310,6 @@ def confirm_appointment(appointment):
         )
 
 
-
-
-from django.shortcuts import get_object_or_404
-
-def confirm_appointment(request, appointment_id):
-    appointment = get_object_or_404(Appointment, id=appointment_id)
-
-    appointment.status = "confirmed"
-    appointment.save()
-
-    # 🔥 STEP 6 IS HERE
-    notify_patient_confirmation(appointment)
-
-    return redirect("/admin/")
 
 
 def patient_notifications(request):
