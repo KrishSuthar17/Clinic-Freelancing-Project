@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import testimonials_reviews,faq,gallery,blog,contact_gallary,Appointment,Notification
-from clinic_app.utils.notifications import notify_patient_confirmation
+from clinic_app.utils.notifications import notify_patient_cancellation, notify_patient_confirmation
 # Register your models here.
 
 admin.site.register(testimonials_reviews)
@@ -47,6 +47,11 @@ class AppointmentAdmin(admin.ModelAdmin):
         if old_status != "confirmed" and obj.status == "confirmed":
             print("🔥 ADMIN CONFIRM → SENDING PATIENT NOTIFICATION")
             notify_patient_confirmation(obj)
+        
+        # ❌ CANCEL
+        if old_status != "cancelled" and obj.status == "cancelled":
+            print("🔥 ADMIN → CANCEL")
+            notify_patient_cancellation(obj)
     
     readonly_fields = ("patient_name", "phone")
 
