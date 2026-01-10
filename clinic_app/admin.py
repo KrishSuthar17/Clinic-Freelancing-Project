@@ -43,6 +43,9 @@ class AppointmentAdmin(admin.ModelAdmin):
 
         super().save_model(request, obj, form, change)
 
+        if old_status == obj.status:
+            return  # 🚫 NO STATUS CHANGE → NO NOTIFICATION
+
         # 🔥 SEND NOTIFICATION ONLY ON STATUS CHANGE → confirmed
         if old_status != "confirmed" and obj.status == "confirmed":
             print("🔥 ADMIN CONFIRM → SENDING PATIENT NOTIFICATION")

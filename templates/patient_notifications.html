@@ -10,9 +10,17 @@
     <br>
     <form method="post" class="space-y-4 mt-6">
         {% csrf_token %}
-        <input type="text" name="phone" placeholder="Enter your phone number" value="{{ phone|default:'' }}"
+        <input type="text" maxlength="10" name="phone" placeholder="Enter your phone number" value="{{ phone|default:'' }}"
             class="w-full border rounded px-4 py-2" required>
 
+        <p class=" text-red-600 mt-2">Please Enable Notifications for confirmation and cancellation your appointments.</p>
+        <button
+        type="button"
+        id="enablePatientNotifications"
+        class="w-full mt-4 bg-green-600 text-white py-2 rounded font-semibold"
+        >
+        🔔 Enable Appointment Notifications
+    </button>
         <button type="submit" class="w-full bg-blue-600 text-black py-2 rounded font-semibold">
             View Notifications
         </button>
@@ -40,13 +48,7 @@
     </ul>
     {% endif %}
 
-    <button
-        type="button"
-        id="enablePatientNotifications"
-        class="w-full mt-4 bg-green-600 text-white py-2 rounded font-semibold"
-        >
-        🔔 Enable Appointment Notifications
-    </button>
+    
 
 </div>
 
@@ -97,6 +99,11 @@
       const token = await messaging.getToken({
         vapidKey: "BJSaZGxtvJCDGFyGvqbZDoTCujGjOOqOYG7Pdjhu1svf_AWwk1642KGfOXq83zTr9i-wg7tTsx-3TxrSIfdGe_4"
       });
+      if (!token) {
+        alert("Failed to get notification token");
+        return;
+      }
+
 
       console.log("✅ PATIENT TOKEN:", token);
 
@@ -105,6 +112,7 @@
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": getCSRFToken(),
         },
         body: new URLSearchParams({
           user_type: "patient",
@@ -112,6 +120,7 @@
           token: token,
         }),
       });
+
 
       console.log("REGISTER RESPONSE:", res.status);
 

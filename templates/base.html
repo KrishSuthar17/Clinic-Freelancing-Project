@@ -20,6 +20,8 @@
 
 
   {% endblock %}
+  <input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+
 
   {% include "components/footer.html" %}
 
@@ -28,6 +30,21 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
 
   <script>
+    // security
+    function getCSRFToken() {
+      const name = "csrftoken";
+      const cookies = document.cookie.split(";");
+
+      for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name + "=")) {
+          return cookie.substring(name.length + 1);
+        }
+      }
+      return null;
+    }
+
+
 
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/firebase-messaging-sw.js")

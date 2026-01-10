@@ -223,7 +223,6 @@ def book_appointment(request):
 
 
 
-@csrf_exempt
 def register_device(request):
     print("🔥 REGISTER DEVICE HIT")
     print("POST DATA:", request.POST)

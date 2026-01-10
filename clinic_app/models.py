@@ -184,6 +184,14 @@ class Device(models.Model):
     is_active = models.BooleanField(default=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user_type", "phone", "fcm_token"],
+                name="unique_device_per_user"
+            )
+        ]
+
     def __str__(self):
         return f"{self.user_type}"
     

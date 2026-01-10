@@ -118,6 +118,33 @@
 
 
 <script>
+ fetch("/register-device/", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/x-www-form-urlencoded",
+    "X-CSRFToken": getCSRFToken(), // 🔐 REQUIRED
+  },
+  body: new URLSearchParams({
+    user_type: "patient",
+    phone: phone,
+    token: token,
+  }),
+});
+
+const res = await fetch("/register-device/", { ... });
+
+console.log("STATUS =", res.status);
+const text = await res.text();
+console.log("RESPONSE BODY =", text);
+
+if (res.ok) {
+  alert("✅ Notifications enabled");
+} else {
+  alert("❌ Failed to register device (see console)");
+}
+
+
+
   // testing
 const messaging = firebase.messaging();
 
@@ -165,17 +192,6 @@ document
       vapidKey: "BJSaZGxtvJCDGFyGvqbZDoTCujGjOOqOYG7Pdjhu1svf_AWwk1642KGfOXq83zTr9i-wg7tTsx-3TxrSIfdGe_4"
     });
 
-    await fetch("/register-device/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        token: token,
-        user_type: "patient",
-        phone: phone
-      }),
-    });
 
     alert("✅ You will receive appointment updates");
     console.log("Patient FCM token:", token);
