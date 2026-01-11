@@ -27,6 +27,8 @@ from datetime import date as dt_date
 from django.core.exceptions import ValidationError
 
 # Create your views here.
+from .models import ClinicSchedule
+from datetime import datetime
 
 @login_required
 def doctor_page(reqest):
@@ -134,14 +136,9 @@ def book_appointment(request):
     # =========================
     if request.method == "GET":
         doctors = Doctor.objects.filter(is_active=True)
-
-        # 🔹 Dates to disable in calendar (we'll use this in template)
-        holidays = ClinicHoliday.objects.values_list("date", flat=True)
-
         return render(request, "Appoinment.html", {
             "doctors": doctors,
-            "slots": TIME_SLOTS,
-            "holidays": list(holidays),
+            "slots": TIME_SLOTS
         })
 
 
@@ -173,7 +170,13 @@ def book_appointment(request):
         return render(request, "error.html", {
             "error": "Invalid date or time format."
         })
-    doctor = Doctor.objects.all().first()
+    
+
+    doctor = get_object_or_404(
+        Doctor,
+        id=request.POST.get("doctor"),
+        is_active=True
+    )
 
     # ❌ SUNDAY BLOCK
     if date_obj.weekday() == 6:
@@ -201,6 +204,45 @@ def book_appointment(request):
         return render(request, "error.html", {
             "error": "Invalid time slot selected."
         })
+    
+
+    # ---- CLINIC SCHEDULE VALIDATION (NEW) ----
+    schedule = ClinicSchedule.objects.first()
+
+    if schedule:
+        selected_date_str = date_obj.strftime("%Y-%m-%d")
+        weekday = date_obj.weekday()  # Monday=0 ... Sunday=6
+
+        day_map = {
+            "monday": 0,
+            "tuesday": 1,
+            "wednesday": 2,
+            "thursday": 3,
+            "friday": 4,
+            "saturday": 5,
+            "sunday": 6,
+        }
+
+        # ✅ Special OPEN date → allow
+        if selected_date_str in schedule.special_open_dates:
+            pass
+
+        # ❌ Special CLOSED date
+        elif selected_date_str in schedule.special_closed_dates:
+            return render(request, "error.html", {
+                "error": "Clinic is closed on this date."
+            })
+
+        # ❌ Weekly OFF (Sunday etc.)
+        else:
+            for d in schedule.weekly_off_days:
+                if weekday == day_map.get(d.lower()):
+                    return render(request, "error.html", {
+                        "error": "Clinic is closed on this day."
+                    })
+
+
+
 
     # ---- 1️⃣ IDEMPOTENCY (first, always) ----
     raw_key = request.POST.get("idempotency_key")
@@ -244,10 +286,18 @@ def book_appointment(request):
                 idempotency_key=key,
             )
 
-    except IntegrityError:
-        return render(request, "error.html", {
-            "error": "This time slot is already booked."
-        })
+    except IntegrityError as e:
+        msg = str(e).lower()
+
+        if "idempotency" in msg:
+            error = "Duplicate request detected. Please refresh and try again."
+        elif "doctor" in msg or "time_slot" in msg:
+            error = "This time slot is already booked."
+        else:
+            error = "Something went wrong. Please try again."
+
+        return render(request, "error.html", {"error": error})
+
 
     # ---- 4️⃣ NOTIFY DOCTOR (AFTER COMMIT) ----
     notify_doctor_new_booking(appointment)

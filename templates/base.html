@@ -1,33 +1,49 @@
 {% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}
+        Dr.Ketul Soni Homeopathic Clinic
+      {% endblock %}
+    </title>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Dr.Ketul Soni Homeopathic Clinic{% endblock %}</title>
-  {% tailwind_css %}
-</head>
+    {% tailwind_css %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+    <style>
+      /* Disabled dates – clearly grey */
+      .flatpickr-day.disabled,
+      .flatpickr-day.disabled:hover {
+        background-color: #f3f4f6 !important; /* light gray */
+        color: #9ca3af !important; /* gray text */
+        cursor: not-allowed !important;
+        text-decoration: line-through;
+      }
+      
+      /* Today highlight */
+      .flatpickr-day.today {
+        border-color: #2563eb !important;
+      }
+    </style>
+  </head>
 
-<body class="bg-background text-foreground">
+  <body class="bg-background text-foreground">
+    {% include 'components/navbar.html' %}
 
-  {% include "components/navbar.html" %}
+    {% block content %}
+      <link rel="manifest" href="{% static 'manifest.json' %}" />
+      <meta name="theme-color" content="#2563eb" />
+    {% endblock %}
+    <input type="hidden" id="csrf-token" value="{{ csrf_token }}" />
 
-  {% block content %}
-  <link rel="manifest" href="{% static 'manifest.json' %}">
-  <meta name="theme-color" content="#2563eb">
+    {% include 'components/footer.html' %}
 
-
-
-  {% endblock %}
-  <input type="hidden" id="csrf-token" value="{{ csrf_token }}">
-
-
-  {% include "components/footer.html" %}
-
-  <!-- <script src="{% static 'js/ui.js' %}"></script> -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+    <!-- <script src="{% static 'js/ui.js' %}"></script> -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
   <script>
     // security
@@ -43,7 +59,6 @@
       }
       return null;
     }
-
 
 
 
@@ -101,17 +116,6 @@
     hamburger.addEventListener("click", () => {
       navLinks.classList.toggle("show");
     });
-
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/firebase-messaging-sw.js")
-        .then(reg => {
-          console.log("✅ SW registered", reg.scope);
-        })
-        .catch(err => {
-          console.error("❌ SW failed", err);
-        });
-    }
-
   </script>
 </body>
 

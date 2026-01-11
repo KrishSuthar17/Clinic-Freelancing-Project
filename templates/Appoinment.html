@@ -1,125 +1,160 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-  <div class="bg-white max-w-lg  shadow-xl rounded-2xl p-8">
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div class="bg-white max-w-lg shadow-xl rounded-2xl p-8">
+      <!-- Header -->
+      <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">Book Appointment</h1>
 
-    <!-- Header -->
-    <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">
-      Book Appointment
-    </h1>
+      <!-- Form -->
+      <form method="post" class="space-y-5">
+        {% csrf_token %}
 
-    <!-- Form -->
-    <form method="post" class="space-y-5">
-      {% csrf_token %}
+        <!-- Name -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+          <input name="name" required placeholder="Enter your full name" class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" />
+        </div>
 
-      <!-- Name -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">
-          Your Name
-        </label>  
-        <input
-          name="name"
-          required
-          placeholder="Enter your full name"
-          class="w-full rounded-lg border border-gray-300 px-4 py-2
-                 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-        >
-      </div>
+        <!-- Phone -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+          <input maxlength="10" name="phone" required placeholder="10-digit mobile number" class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" />
+        </div>
 
-      <!-- Phone -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">
-          Phone Number
-        </label>
-        <input
-          maxlength="10"
-          name="phone"
-          required
-          placeholder="10-digit mobile number"
-          class="w-full rounded-lg border border-gray-300 px-4 py-2
-                 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-        >
-      </div>
+        <!-- Doctor -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Select Doctor</label>
+          <select name="doctor" required class="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary">
+            <option value="" disabled selected>Choose a doctor</option>
+            {% for doc in doctors %}
+              <option value="{{ doc.id }}">{{ doc.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
 
-      <!-- Doctor -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">
-          Select Doctor
-        </label>
-        <select
-          name="doctor"
-          required
-          class="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white
-                 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-        >
-          <option value="" disabled selected>Choose a doctor</option>
-          {% for doc in doctors %}
-            <option value="{{ doc.id }}">{{ doc.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
+        <!-- Date -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Appointment Date</label>
+          <input type="text" name="date" id="appointmentDate" placeholder="DD-MM-YYYY" class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" />
+        </div>
       <!-- Date -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">
-          Appointment Date
-        </label>
-        <input
-          type="date"
-          name="date"
-          required
-          min="{{ today|default:'' }}"
-          oninput="validateDate(this)"
-          required
-          class="w-full rounded-lg border border-gray-300 px-4 py-2
-                 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-        >
-      </div>
+      
 
-      <!-- Time Slot -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">
-          Time Slot
-        </label>
-        <select
-          name="time"
-          required
-          class="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white
-                 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-        >
-          <option value="" disabled selected>Select a time slot</option>
-           {% for slot in slots %}
-            <option value="{{ slot|time:'H:i' }}">
-              {{ slot|time:'H:i' }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
+        <!-- Time Slot -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Time Slot</label>
+          <select name="time" required class="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary">
+            <option value="" disabled selected>Select a time slot</option>
+            {% for slot in slots %}
+              <option value="{{ slot|time:'H:i' }}">{{ slot|time:'H:i' }}</option>
+            {% endfor %}
+          </select>
+        </div>
 
-      <!-- Hidden idempotency key -->
-      <input type="hidden" name="idempotency_key" id="idempotency_key">
+        <!-- Hidden idempotency key -->
+        <input type="hidden" name="idempotency_key" id="idempotency_key">
 
-      <!-- Submit -->
-      <button
-      type="submit"
-      class="w-full bg-primary text-black border-2 font-semibold py-3 rounded-lg
-      hover:bg-primary/90 transition duration-200
-      focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-      >
-      Book Appointment
-    </button>
-  </form>
+        <!-- Submit -->
+        <button type="submit" class="w-full bg-primary text-black border-2 font-semibold py-3 rounded-lg hover:bg-primary/90 transition duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">Book Appointment</button>
+      </form>
+      {{ weekly_off_days|json_script:'weekly-off-days' }}
+      {{ special_closed_dates|json_script:'special-closed-dates' }}
+      {{ special_open_dates|json_script:'special-open-dates' }}
 
-    <!-- Footer note -->
-    <p class="text-xs text-gray-500 text-center mt-6">
-      Your information is securely submitted and will not be shared.
-    </p>
+      <!-- Footer note -->
+      <p class="text-xs text-gray-500 text-center mt-6">Your information is securely submitted and will not be shared.</p>
+    </div>
   </div>
-</div>
 
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("idempotency_key").value = crypto.randomUUID();
 
+  document.querySelector("form").addEventListener("submit", () => {
+  document.getElementById("idempotency_key").value = crypto.randomUUID();
+});
+    
+      /* 📅 Schedule data */
+      const weeklyOffDays = JSON.parse(document.getElementById('weekly-off-days').textContent)
+      const specialClosedDates = JSON.parse(document.getElementById('special-closed-dates').textContent)
+      const specialOpenDates = JSON.parse(document.getElementById('special-open-dates').textContent)
+    
+      const offDayNumbers = {
+        sunday: 0,
+        monday: 1,
+        tuesday: 2,
+        wednesday: 3,
+        thursday: 4,
+        friday: 5,
+        saturday: 6
+      }
+    
+      /* 📅 Flatpickr */
+      flatpickr('#appointmentDate', {
+        dateFormat: 'Y-m-d',
+        altInput: true,
+        altFormat: 'd-m-Y',
+        minDate: 'today',
+        disable: [
+          function (date) {
+            const dateStr = date.toLocaleDateString('en-CA')
+    
+            if (specialOpenDates.includes(dateStr)) return false
+            if (specialClosedDates.includes(dateStr)) return true
+    
+            const dayName = Object.keys(offDayNumbers).find((k) => offDayNumbers[k] === date.getDay())
+    
+            return weeklyOffDays.includes(dayName)
+          }
+        ]
+      })
+    
+      /* 🔔 Notification on form submit */
+      const form = document.querySelector('form')
+    
+      form.addEventListener('submit', async function () {
+        try {
+          const phone = document.querySelector("input[name='phone']").value
+          if (!phone || phone.length !== 10) return
+    
+          const permission = await Notification.requestPermission()
+          if (permission !== 'granted') return
+    
+          if (!firebase.apps.length) {
+            firebase.initializeApp({
+              apiKey: 'AIzaSyCEHTsXR53kbgYEQ2TrlhqMN_2F0Gzs4TM',
+              authDomain: 'clinic-notifications.firebaseapp.com',
+              projectId: 'clinic-notifications',
+              messagingSenderId: '966949240460',
+              appId: '1:966949240460:web:892b509260d0d660fc05a9'
+            })
+          }
+    
+          const messaging = firebase.messaging()
+          const token = await messaging.getToken({
+            vapidKey: 'BJSaZGxtvJCDGFyGvqbZDoTCujGjOOqOYG7Pdjhu1svf_AWwk1642KGfOXq83zTr9i-wg7tTsx-3TxrSIfdGe_4'
+          })
+    
+          await fetch('/register-device/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'X-CSRFToken': getCSRFToken()
+            },
+            body: new URLSearchParams({
+              user_type: 'patient',
+              phone: phone,
+              token: token
+            })
+          })
+        } catch (e) {
+          console.error('Notification error:', e)
+        }
+      })
+    })
+  </script>
 <script>
  fetch("/register-device/", {
   method: "POST",
