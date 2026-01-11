@@ -10,6 +10,13 @@
 
 
 
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/firebase-messaging-sw.js")
+      .then(() => console.log("✅ Doctor SW registered"))
+      .catch(err => console.error("❌ Doctor SW failed", err));
+  }
+</script>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>

@@ -11,14 +11,18 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage(function (payload) {
-  // console.log("[firebase-messaging-sw.js] Background message:", payload);
+// 🔔 BACKGROUND NOTIFICATION HANDLER
+messaging.onBackgroundMessage(function(payload) {
+  console.log("[SW] Background message received:", payload);
+
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: "/static/images/doctor-hero.jpg", // optional
+  };
 
   self.registration.showNotification(
-    payload.notification.title,
-    {
-      body: payload.notification.body,
-      icon: "/static/icon.png", // optional
-    }
+    notificationTitle,
+    notificationOptions
   );
 });
