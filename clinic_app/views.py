@@ -24,6 +24,8 @@ import re
 from django.utils.dateparse import parse_date, parse_time
 from django.contrib.auth.decorators import login_required
 # Create your views here.
+from .models import ClinicSchedule
+from datetime import datetime
 
 @login_required
 def doctor_page(reqest):
@@ -131,9 +133,13 @@ def book_appointment(request):
     # =========================
     if request.method == "GET":
         doctors = Doctor.objects.filter(is_active=True)
+        schedule = ClinicSchedule.objects.first()
         return render(request, "Appoinment.html", {
             "doctors": doctors,
-            "slots": TIME_SLOTS
+            "slots": TIME_SLOTS,
+            "weekly_off_days": schedule.weekly_off_days if schedule else [],
+            "special_closed_dates": schedule.special_closed_dates if schedule else [],
+            "special_open_dates": schedule.special_open_dates if schedule else [],
         })
 
     # =========================
@@ -166,6 +172,45 @@ def book_appointment(request):
         return render(request, "error.html", {
             "error": "Invalid time slot selected."
         })
+    
+
+    # ---- CLINIC SCHEDULE VALIDATION (NEW) ----
+    schedule = ClinicSchedule.objects.first()
+
+    if schedule:
+        selected_date_str = date_obj.strftime("%Y-%m-%d")
+        weekday = date_obj.weekday()  # Monday=0 ... Sunday=6
+
+        day_map = {
+            "monday": 0,
+            "tuesday": 1,
+            "wednesday": 2,
+            "thursday": 3,
+            "friday": 4,
+            "saturday": 5,
+            "sunday": 6,
+        }
+
+        # ✅ Special OPEN date → allow
+        if selected_date_str in schedule.special_open_dates:
+            pass
+
+        # ❌ Special CLOSED date
+        elif selected_date_str in schedule.special_closed_dates:
+            return render(request, "error.html", {
+                "error": "Clinic is closed on this date."
+            })
+
+        # ❌ Weekly OFF (Sunday etc.)
+        else:
+            for d in schedule.weekly_off_days:
+                if weekday == day_map.get(d.lower()):
+                    return render(request, "error.html", {
+                        "error": "Clinic is closed on this day."
+                    })
+
+
+
 
     # ---- 1️⃣ IDEMPOTENCY (first, always) ----
     raw_key = request.POST.get("idempotency_key")

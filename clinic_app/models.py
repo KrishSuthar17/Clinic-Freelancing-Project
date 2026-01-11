@@ -241,3 +241,12 @@ class RateLimit(models.Model):
     ip_address = models.GenericIPAddressField()
     count = models.PositiveIntegerField(default=0)
     window_start = models.DateTimeField()
+
+
+class ClinicSchedule(models.Model):
+    weekly_off_days = models.JSONField(default=list, blank=True)
+    special_closed_dates = models.JSONField(default=list, blank=True)
+    special_open_dates = models.JSONField(default=list, blank=True)
+
+    def __str__(self):
+        return "Clinic Schedule"
