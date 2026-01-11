@@ -70,6 +70,22 @@ class Doctor(models.Model):
     )
     def __str__(self):
         return self.name
+    
+class DoctorLeave(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+    def __str__(self):
+        return f"{self.doctor.name} Leave from {self.start_date} to {self.end_date}"
+    
+
+class ClinicHoliday(models.Model):
+    date = models.DateField(unique=True)
+    reason = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return f"Holiday on {self.date} - {self.reason}"
 
 
 # diseases/models.py

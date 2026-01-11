@@ -6,7 +6,7 @@ from clinic_app.models import ClinicInfo, Disease, Doctor, HomeopathyAbout, Live
 from .forms import testimonials_reviews_forms
 from django.contrib import messages
 from django.shortcuts import redirect,get_object_or_404
-from .models import Homeopathy_end_about_content, Homeopathy_start_about_content, faq, testimonials_reviews, gallery, blog, contact_gallary
+from .models import ClinicHoliday, DoctorLeave, Homeopathy_end_about_content, Homeopathy_start_about_content, faq, testimonials_reviews, gallery, blog, contact_gallary
 from .utils.time_slots import TIME_SLOTS
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -23,6 +23,9 @@ from .utils.rate_limit import is_rate_limited
 import re
 from django.utils.dateparse import parse_date, parse_time
 from django.contrib.auth.decorators import login_required
+from datetime import date as dt_date
+from django.core.exceptions import ValidationError
+
 # Create your views here.
 
 @login_required
@@ -126,15 +129,21 @@ def blog_detail(request, slug):
 
 def book_appointment(request):
 
-    # =========================
+     # =========================
     # GET → SHOW FORM
     # =========================
     if request.method == "GET":
         doctors = Doctor.objects.filter(is_active=True)
+
+        # 🔹 Dates to disable in calendar (we'll use this in template)
+        holidays = ClinicHoliday.objects.values_list("date", flat=True)
+
         return render(request, "Appoinment.html", {
             "doctors": doctors,
-            "slots": TIME_SLOTS
+            "slots": TIME_SLOTS,
+            "holidays": list(holidays),
         })
+
 
     # =========================
     # POST → PROCESS BOOKING
@@ -148,6 +157,9 @@ def book_appointment(request):
     date_str = request.POST.get("date")
     time_str = request.POST.get("time")
 
+    date_obj = parse_date(date_str)
+    time_obj = parse_time(time_str)
+
     if not isinstance(date_str, str) or not isinstance(time_str, str):
         return render(request, "error.html", {
         "error": "Invalid date or time selected."
@@ -160,6 +172,29 @@ def book_appointment(request):
     if not date_obj or not time_obj:
         return render(request, "error.html", {
             "error": "Invalid date or time format."
+        })
+    doctor = Doctor.objects.all().first()
+
+    # ❌ SUNDAY BLOCK
+    if date_obj.weekday() == 6:
+        return render(request, "error.html", {
+            "error": "Appointments are not available on Sundays."
+        })
+    
+     # ❌ CLINIC HOLIDAY
+    if ClinicHoliday.objects.filter(date=date_obj).exists():
+        return render(request, "error.html", {
+            "error": "Clinic is closed on this date."
+        })
+    
+    # ❌ DOCTOR LEAVE
+    if DoctorLeave.objects.filter(
+        doctor=doctor,
+        start_date__lte=date_obj,
+        end_date__gte=date_obj
+    ).exists():
+        return render(request, "error.html", {
+            "error": "Doctor is unavailable on this date."
         })
 
     if time_obj not in TIME_SLOTS:
@@ -177,6 +212,7 @@ def book_appointment(request):
             key = UUID(raw_key)
         except Exception:
             key = uuid.uuid4()  
+            
     # ---- 2️⃣ RATE LIMIT (only after valid input) ----
     if is_rate_limited(phone, ip):
         log_action(request, "RATE_LIMIT_BLOCK", phone=phone)

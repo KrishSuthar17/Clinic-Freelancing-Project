@@ -70,6 +70,9 @@
           type="date"
           name="date"
           required
+          min="{{ today|default:'' }}"
+          oninput="validateDate(this)"
+          required
           class="w-full rounded-lg border border-gray-300 px-4 py-2
                  focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
         >
@@ -143,7 +146,25 @@ if (res.ok) {
   alert("❌ Failed to register device (see console)");
 }
 
+  // Clinic holidays from backend
+  const holidays = {{ holidays|safe }};
 
+  function validateDate(input) {
+    const selected = input.value;
+    const day = new Date(selected).getDay();
+
+    if (day === 0) {
+      alert("❌ Sundays are not allowed");
+      input.value = "";
+      return;
+    }
+
+    if (holidays.includes(selected)) {
+      alert("❌ Clinic holiday");
+      input.value = "";
+      return;
+    }
+  }
 
   // testing
 const messaging = firebase.messaging();
