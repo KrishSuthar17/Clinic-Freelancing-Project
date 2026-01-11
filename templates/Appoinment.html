@@ -124,11 +124,11 @@ document.addEventListener("DOMContentLoaded", () => {
     
           if (!firebase.apps.length) {
             firebase.initializeApp({
-              apiKey: 'AIzaSyCEHTsXR53kbgYEQ2TrlhqMN_2F0Gzs4TM',
-              authDomain: 'clinic-notifications.firebaseapp.com',
-              projectId: 'clinic-notifications',
-              messagingSenderId: '966949240460',
-              appId: '1:966949240460:web:892b509260d0d660fc05a9'
+              apiKey: "{{GOOGLE_MAPS_API_KEY}}",
+              authDomain: "{{authDomain}}",
+              projectId: "{{projectId}}",
+              messagingSenderId: "{{messagingSenderId}}",
+              appId: "{{appId}}",
             })
           }
     
@@ -218,11 +218,11 @@ document.getElementById("idempotency_key").value =
 
 
 firebase.initializeApp({
-  apiKey: "AIzaSyCEHTsXR53kbgYEQ2TrlhqMN_2F0Gzs4TM",
-  authDomain: "clinic-notifications.firebaseapp.com",
-  projectId: "clinic-notifications",
-  messagingSenderId: "966949240460",
-  appId: "1:966949240460:web:892b509260d0d660fc05a9",
+    apiKey: "{{GOOGLE_MAPS_API_KEY}}",
+    authDomain: "{{authDomain}}",
+    projectId: "{{projectId}}",
+    messagingSenderId: "{{messagingSenderId}}",
+    appId: "{{appId}}",
 });
 
 const messaging = firebase.messaging();

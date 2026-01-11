@@ -1,3 +1,5 @@
+from multiprocessing import context
+import os
 import uuid
 from django.shortcuts import render
 from httpcore import request
@@ -32,7 +34,14 @@ from datetime import datetime
 
 @login_required
 def doctor_page(reqest):
-    return render(reqest, 'doctor/dashboard.html')
+    context = {
+        "GOOGLE_MAPS_API_KEY" : os.getenv("google_apiKey"),
+        "authDomain" : os.getenv("authDomain"),
+        "projectId" : os.getenv("projectId"),
+        "messagingSenderId" : os.getenv("messagingSenderId"),
+        "appId" : os.getenv("appId"),
+    }
+    return render(reqest, 'doctor/dashboard.html', context)
 
 def home_page(request):
     context = {
@@ -135,11 +144,16 @@ def book_appointment(request):
     # GET → SHOW FORM
     # =========================
     if request.method == "GET":
-        doctors = Doctor.objects.filter(is_active=True)
-        return render(request, "Appoinment.html", {
-            "doctors": doctors,
-            "slots": TIME_SLOTS
-        })
+        context = {
+            "doctors": Doctor.objects.filter(is_active=True),
+            "slots": TIME_SLOTS,
+            "GOOGLE_MAPS_API_KEY" : os.getenv("google_apiKey"),
+            "authDomain" : os.getenv("authDomain"),
+            "projectId" : os.getenv("projectId"),
+            "messagingSenderId" : os.getenv("messagingSenderId"),
+            "appId" : os.getenv("appId"),
+        }
+        return render(request, "Appoinment.html", context)
 
 
     # =========================
@@ -301,10 +315,15 @@ def book_appointment(request):
 
     # ---- 4️⃣ NOTIFY DOCTOR (AFTER COMMIT) ----
     notify_doctor_new_booking(appointment)
-
-    return render(request, "success.html", {
-        "appointment": appointment
-    })
+    context = {
+        "appointment": appointment,
+        "GOOGLE_MAPS_API_KEY" : os.getenv("google_apiKey"),
+        "authDomain" : os.getenv("authDomain"),
+        "projectId" : os.getenv("projectId"),
+        "messagingSenderId" : os.getenv("messagingSenderId"),
+        "appId" : os.getenv("appId"),
+    }
+    return render(request, "success.html", context)
 
 
 
@@ -424,9 +443,15 @@ def patient_notifications(request):
 
             if not notifications:
                 error = "No notifications found for this number."
-
-    return render(request, "patient_notifications.html", {
+    context = {
         "notifications": notifications,
         "phone": phone,
-        "error": error
-    })
+        "error": error,
+        "GOOGLE_MAPS_API_KEY" : os.getenv("google_apiKey"),
+        "authDomain" : os.getenv("authDomain"),
+        "projectId" : os.getenv("projectId"),
+        "messagingSenderId" : os.getenv("messagingSenderId"),
+        "appId" : os.getenv("appId"),
+    }
+
+    return render(request, "patient_notifications.html", context)

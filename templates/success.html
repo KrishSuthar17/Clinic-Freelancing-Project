@@ -2,30 +2,29 @@
 {% block content %}
 
 <div class="max-w-md h-[80vh] mx-auto mt-12 bg-white p-6 ">
-  
-    <div class="max-w-md  mx-auto mt-12 bg-amber-50 scale-150 p-6 rounded-xl shadow">
-        <h2 class="text-xl font-bold text-green-600 text-center">
-    ✅ Appointment Booked
-  </h2>
 
-  {% if is_authenticated %}
-   <p class="text-center text-gray-600 mt-2">
-    Enable notifications to get updates.
-  </p>
+  <div class="max-w-md  mx-auto mt-12 bg-amber-50 scale-150 p-6 rounded-xl shadow">
+    <h2 class="text-xl font-bold text-green-600 text-center">
+      ✅ Appointment Booked
+    </h2>
 
-  <button id="enableNotificationsBtn"
-          class="mt-6 w-full bg-blue-600 text-black py-3 rounded-lg font-semibold">
-    🔔 Enable Notifications
-  </button>
-  {% else %}
-  <p>You Can Check Your Appointment Click Below</p>
-  {% endif %}
+    {% if is_authenticated %}
+    <p class="text-center text-gray-600 mt-2">
+      Enable notifications to get updates.
+    </p>
 
-  <a href="/my-notifications/?phone={{ appointment.phone }}"
-   class="block mt-6 m-auto text-center text-white bg-red-400 rounded-2xl w-1/2 underline">
-   View My Notifications
-</a>
-    </div>
+    <button id="enableNotificationsBtn" class="mt-6 w-full bg-blue-600 text-black py-3 rounded-lg font-semibold">
+      🔔 Enable Notifications
+    </button>
+    {% else %}
+    <p>You Can Check Your Appointment Click Below</p>
+    {% endif %}
+
+    <a href="/my-notifications/?phone={{ appointment.phone }}"
+      class="block mt-6 m-auto text-center text-white bg-red-400 rounded-2xl w-1/2 underline">
+      View My Notifications
+    </a>
+  </div>
 
 </div>
 
@@ -36,18 +35,18 @@
   import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
 
   const firebaseConfig = {
-    apiKey: "AIzaSyCEHTsXR53kbgYEQ2TrlhqMN_2F0Gzs4TM",
-    authDomain: "clinic-notifications.firebaseapp.com",
-    projectId: "clinic-notifications",
-    messagingSenderId: "966949240460",
-    appId: "1:966949240460:web:892b509260d0d660fc05a9",
+    apiKey: "{{GOOGLE_MAPS_API_KEY}}",
+    authDomain: "{{authDomain}}",
+    projectId: "{{projectId}}",
+    messagingSenderId: "{{messagingSenderId}}",
+    appId: "{{appId}}",
   };
-
+  console.log(firebaseConfig.apiKey);
   const app = initializeApp(firebaseConfig);
   const messaging = getMessaging(app);
 
   document.getElementById("enableNotificationsBtn").onclick = async () => {
-   
+
 
     const permission = await Notification.requestPermission();
     if (permission !== "granted") {
@@ -61,16 +60,16 @@
 
 
     await fetch("/register-device/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-            token: token,
-            user_type: "patient",
-            phone: "{{ appointment.phone }}"
-        }),
-        });
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        token: token,
+        user_type: "patient",
+        phone: "{{ appointment.phone }}"
+      }),
+    });
 
     alert("✅ Notifications enabled");
   };
