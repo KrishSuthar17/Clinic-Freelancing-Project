@@ -351,9 +351,10 @@ def register_device(request):
         # ✅ DO NOT use user_id for phone
         device, created = Device.objects.update_or_create(
             fcm_token=token,
+            user_type = "patient",
             defaults={
-                "user_type": "patient",
                 "phone": phone,
+                "user": None,
                 "is_active": True,
             }
         )
@@ -367,9 +368,9 @@ def register_device(request):
 
         device, created = Device.objects.update_or_create(
             fcm_token=token,
+            user_type= "doctor",
             defaults={
-                "user_type": "doctor",
-                "user_id": request.user.id,  # ONLY doctors use user_id
+                "user": request.user,
                 "phone": None,
                 "is_active": True,
             }

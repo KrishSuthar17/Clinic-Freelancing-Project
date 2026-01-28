@@ -42,32 +42,51 @@
   document
     .getElementById("enableNotificationsBtn")
     .addEventListener("click", async () => {
-      const permission = await Notification.requestPermission();
-      if (permission !== "granted") {
-        alert("Permission denied");
-        return;
+
+      try {
+
+        const swReg = await ensureServiceWorker();
+
+        const permission = await Notification.requestPermission();
+        if (permission !== "granted") {
+          alert("Permission denied");
+          return;
+        }
+
+        const token = await messaging.getToken({
+          vapidKey: "BJSaZGxtvJCDGFyGvqbZDoTCujGjOOqOYG7Pdjhu1svf_AWwk1642KGfOXq83zTr9i-wg7tTsx-3TxrSIfdGe_4",
+          serviceWorkerRegistration: swReg,
+        });
+
+        if (!token) {
+          alert("Token error");
+          return;
+        }
+        console.log("FCM token:", token);
+
+
+        // 4️⃣ Register device
+        const res = await fetch("/register-device/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": getCSRFToken(),
+          },
+          body: new URLSearchParams({
+            user_type: "doctor",
+            token: token,
+          }),
+        });
+
+        if (res.ok) {
+          alert("✅ Doctor notifications enabled");
+        } else {
+          alert("❌ Registration failed");
+        }
+
+      } catch (err) {
+        console.error("❌ Doctor notification error:", err);
       }
-
-      const token = await messaging.getToken({
-        vapidKey: "BJSaZGxtvJCDGFyGvqbZDoTCujGjOOqOYG7Pdjhu1svf_AWwk1642KGfOXq83zTr9i-wg7tTsx-3TxrSIfdGe_4",
-      });
-
-      console.log("FCM token:", token);
-
-      await fetch("/register-device/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "X-CSRFToken": getCSRFToken(),
-        },
-        body: new URLSearchParams({
-          token: token,
-          user_type: "doctor"
-        }),
-      });
-
-
-      alert("✅ Notifications enabled");
     });
 </script>
 

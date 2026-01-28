@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from ckeditor.fields import RichTextField
@@ -93,7 +94,7 @@ class Disease(models.Model):
     name = models.CharField(max_length=100)
     icon = models.ImageField(upload_to="diseases/")
     slug = models.SlugField(max_length=100, unique=True, default="Disease")
-    description = models.TextField(max_length=300, null=True, blank=True)
+    description = models.TextField(max_length=2500, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     
 
@@ -192,24 +193,36 @@ class Device(models.Model):
         ('doctor','Doctor'),
         ('patient','Patient')
     ]
-
     user_type = models.CharField(max_length=10, choices=USER_TYPE)
-    # user_id = models.IntegerField(null=True, blank=True)  # doctor user id
-    phone = models.CharField(max_length=15, null=True, blank=True)  # 🔥 ADD THIS
-    fcm_token = models.TextField(unique=True)
+    phone = models.CharField(max_length=15, null=True, blank=True)  
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE
+    )    
+    fcm_token = models.TextField()
     is_active = models.BooleanField(default=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         constraints = [
+            # Doctor uniqueness
+            models.UniqueConstraint(
+                fields=["user_type", "user", "fcm_token"],
+                name="unique_doctor_device",
+                condition=models.Q(user_type="doctor")
+            ),
+            # Patient uniqueness
             models.UniqueConstraint(
                 fields=["user_type", "phone", "fcm_token"],
-                name="unique_device_per_user"
-            )
+                name="unique_patient_device",
+                condition=models.Q(user_type="patient")
+            ),
         ]
 
     def __str__(self):
-        return f"{self.user_type}"
+        return f"{self.user_type} – {self.fcm_token[:10]}"
     
 
 class Notification(models.Model):

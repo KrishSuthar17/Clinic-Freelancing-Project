@@ -45,34 +45,38 @@
   const app = initializeApp(firebaseConfig);
   const messaging = getMessaging(app);
 
-  document.getElementById("enableNotificationsBtn").onclick = async () => {
+  const btn = document.getElementById("enableNotificationsBtn");
+
+  if (btn) {
+    btn.onclick = async () => {
 
 
-    const permission = await Notification.requestPermission();
-    if (permission !== "granted") {
-      alert("Permission denied");
-      return;
-    }
+      const permission = await Notification.requestPermission();
+      if (permission !== "granted") {
+        alert("Permission denied");
+        return;
+      }
 
-    const token = await getToken(messaging, {
-      vapidKey: "BJSaZGxtvJCDGFyGvqbZDoTCujGjOOqOYG7Pdjhu1svf_AWwk1642KGfOXq83zTr9i-wg7tTsx-3TxrSIfdGe_4"
-    });
+      const token = await getToken(messaging, {
+        vapidKey: "BJSaZGxtvJCDGFyGvqbZDoTCujGjOOqOYG7Pdjhu1svf_AWwk1642KGfOXq83zTr9i-wg7tTsx-3TxrSIfdGe_4"
+      });
 
 
-    await fetch("/register-device/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        token: token,
-        user_type: "patient",
-        phone: "{{ appointment.phone }}"
-      }),
-    });
+      await fetch("/register-device/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          token: token,
+          user_type: "patient",
+          phone: "{{ appointment.phone }}"
+        }),
+      });
 
-    alert("✅ Notifications enabled");
-  };
+      alert("✅ Notifications enabled");
+    };
+  }
 </script>
 
 {% endblock %}

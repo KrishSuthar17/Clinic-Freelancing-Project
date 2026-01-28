@@ -5,6 +5,7 @@ class testimonials_reviews_forms(forms.ModelForm):
     class Meta:
         model = testimonials_reviews
         fields = ['rating','Title_of_your_review','Your_review','Your_name','Your_email','expr']
+        labels = {'expr': 'I confirm that This review is based on my own experience and is my genuine opinion.'} 
         widgets = {
             'Title_of_your_review': forms.TextInput(attrs={
                 'class': 'w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary',
