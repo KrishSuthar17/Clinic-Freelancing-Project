@@ -327,10 +327,10 @@ def book_appointment(request):
 
 
 
-
 def register_device(request):
     print("🔥 REGISTER DEVICE HIT")
     print("POST DATA:", request.POST)
+
     if request.method != "POST":
         return JsonResponse({"error": "Invalid method"}, status=405)
 
@@ -342,35 +342,61 @@ def register_device(request):
         return JsonResponse({"error": "Missing token or user_type"}, status=400)
 
     # ==========================
-    # PATIENT (PHONE-BASED)
+    # 🔥 STEP 1: deactivate SAME token used elsewhere
+    # (role switch / stale entry case)
+    # ==========================
+    Device.objects.filter(
+        fcm_token=token,
+        is_active=True
+    ).update(is_active=False)
+
+    # ==========================
+    # PATIENT
     # ==========================
     if user_type == "patient":
         if not phone:
             return JsonResponse({"error": "Phone is required for patient"}, status=400)
 
-        # ✅ DO NOT use user_id for phone
-        device, created = Device.objects.update_or_create(
+        # 🔥 STEP 2: only ONE active device per phone
+        Device.objects.filter(
+            user_type="patient",
+            phone=phone,
+            is_active=True
+        ).exclude(
+            fcm_token=token
+        ).update(is_active=False)
+
+        device, _ = Device.objects.update_or_create(
+            user_type="patient",
+            phone=phone,
             fcm_token=token,
-            user_type = "patient",
             defaults={
-                "phone": phone,
                 "user": None,
                 "is_active": True,
             }
         )
 
     # ==========================
-    # DOCTOR (AUTHENTICATED USER)
+    # DOCTOR
     # ==========================
     elif user_type == "doctor":
         if not request.user.is_authenticated:
             return JsonResponse({"error": "Unauthorized"}, status=401)
 
-        device, created = Device.objects.update_or_create(
+        # 🔥 STEP 2: only ONE active device per doctor
+        Device.objects.filter(
+            user_type="doctor",
+            user=request.user,
+            is_active=True
+        ).exclude(
+            fcm_token=token
+        ).update(is_active=False)
+
+        device, _ = Device.objects.update_or_create(
+            user_type="doctor",
+            user=request.user,
             fcm_token=token,
-            user_type= "doctor",
             defaults={
-                "user": request.user,
                 "phone": None,
                 "is_active": True,
             }
@@ -383,8 +409,10 @@ def register_device(request):
 
     return JsonResponse({
         "status": "registered",
-        "created": created
+        "device_id": device.id
     })
+
+
 
 
 
